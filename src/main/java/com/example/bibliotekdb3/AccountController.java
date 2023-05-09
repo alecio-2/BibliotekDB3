@@ -39,18 +39,15 @@ public class AccountController {
     private TableView results;
 
 
-
     @FXML
     public void showBorrows() {
-        // Prompt user to enter anvandareNr
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Enter anvandareNr");
-        dialog.setHeaderText(null);
-        dialog.setContentText("AnvandareNr:");
-        Optional<String> result = dialog.showAndWait();
+        // Get the current user
+        String currentUser = UserSession.getCurrentUser();  //Mazkin
+        System.out.println("Current user: " + currentUser);   //Mazkin
 
-        // If user entered a value, execute the query
-        result.ifPresent(anvandareNr -> {
+        if (currentUser != null) { //Mazkin
+
+            String anvandareNr = currentUser; //Mazkin
             try {
                 PreparedStatement stmt = conn.prepareStatement(
                         "SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, " +
@@ -100,21 +97,18 @@ public class AccountController {
                 alert.setContentText("Invalid anvandareNr.");
                 alert.showAndWait();
             }
-        });
+        };
     }
-
 
     @FXML
     public void showReserved() {
-        // Prompt user to enter anvandareNr
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Enter anvandareNr");
-        dialog.setHeaderText(null);
-        dialog.setContentText("AnvandareNr:");
-        Optional<String> result = dialog.showAndWait();
+        // Get the current user
+        String currentUser = UserSession.getCurrentUser();  //Mazkin
+        System.out.println("Current user: " + currentUser);   //Mazkin
 
-        // If user entered a value, execute the query
-        result.ifPresent(anvandareNr -> {
+        if (currentUser != null) { //Mazkin
+
+            String anvandareNr = currentUser; //Mazkin
             try {
                 PreparedStatement stmt = conn.prepareStatement(
                         "SELECT a.fNamn, re.reservationNr, ar.artikelNr, re.reservationDatum, ar.titel, ar.artist, ar.isbn " +
@@ -162,23 +156,13 @@ public class AccountController {
                 alert.setContentText("Invalid anvandareNr.");
                 alert.showAndWait();
             }
-        });
+        };
     }
-
 
     @FXML
     public void are() throws IOException {
         App.setRoot("addRemoveEdit.fxml");
     }
-
-
-
-
-
-
-
-
-
 
     @FXML
     public void back() throws IOException {
@@ -191,6 +175,8 @@ public class AccountController {
     public void close() {
         System.exit(0);
     }
+
+
 
 }
 

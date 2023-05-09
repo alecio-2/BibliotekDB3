@@ -16,6 +16,7 @@ import java.sql.SQLException;
 public class LoginController {
     private Connection conn = DatabaseConnector.getConnection();
 
+    private static String loggedInUser = null; //Mazkin
 
     @FXML
     private TextField usernameInput;
@@ -57,8 +58,11 @@ public class LoginController {
             if (rs.next()) {
                 // User is authenticated
                 fName = rs.getString("fNamn");
-                System.out.println("Welcome " + fName);
 
+                loggedInUser = username; //Mazkin
+                UserSession.setCurrentUser(loggedInUser); //Mazkin - sets the current user in the UserSession class
+
+                System.out.println("Welcome " + fName);
                 App.setRoot("searchWlogin.fxml");
                 System.out.println("Login successful");
             } else {
@@ -76,6 +80,9 @@ public class LoginController {
         }
     }
 
+    public static String getLoggedInUser() { //Mazkin
+        return loggedInUser;
+    }   //Mazkin
 
     @FXML
     public void back() throws IOException {

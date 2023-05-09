@@ -5,6 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert;  //M
+import javafx.scene.control.TableView; //M
+import javafx.scene.control.TextField; //M
+import javafx.scene.control.TableColumn; //M
 
 import java.io.IOException;
 import java.sql.*;
@@ -12,6 +16,8 @@ import java.util.Optional;
 
 public class SearchWloginController {
     private Connection conn = DatabaseConnector.getConnection();
+
+    String currentUser; // Mazkin
 
     @FXML
     private MenuItem back;
@@ -33,8 +39,6 @@ public class SearchWloginController {
 
     @FXML
     private TableView searchResults;
-
-
 
 
     @FXML
@@ -81,24 +85,21 @@ public class SearchWloginController {
         }
     }
 
+
     @FXML
     public void borrow() {
-
+        // Get the current user
+        String currentUser = UserSession.getCurrentUser();  //Mazkin
+        System.out.println("Current user: " + currentUser);   //Mazkin
 
         ObservableList<String> selectedItem = (ObservableList<String>) searchResults.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             String artikelNr = selectedItem.get(0);
 
-            // Prompt the user for anvandareNr
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Borrow Item");
-            dialog.setHeaderText("Enter AnvandareNr:");
-            dialog.setContentText("AnvandareNr:");
 
-            Optional<String> result = dialog.showAndWait();
-            if (result.isPresent()) {
-                String anvandareNr = result.get();
+            if (currentUser != null) { //Mazkin
 
+                String anvandareNr = currentUser; //Mazkin
                 try {
                     // Insert into lan table
                     PreparedStatement stmt1 = conn.prepareStatement("INSERT INTO lan (anvandareNr) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
@@ -126,24 +127,6 @@ public class SearchWloginController {
                     alert.showAndWait();
                 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           /*  String sab = selectedItem.get(1);
             String titel = selectedItem.get(2);
             String artist = selectedItem.get(3);
@@ -165,10 +148,20 @@ public class SearchWloginController {
             System.out.println("logged in as: " + username );
             System.out.println("--------------------------");*/
 
-
             }
+        } else {
+            //No item is selected, show an error message to the user
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select an item to borrow.");
+            alert.showAndWait();
         }
     }
+
+    public String getCurrentUser() {
+        return currentUser;
+    }       //Mazkin
 
 
     @FXML
@@ -180,7 +173,6 @@ public class SearchWloginController {
 
 
     @FXML
-
     public void back() throws IOException {
 
         App.setRoot("startPage.fxml");
@@ -191,4 +183,7 @@ public class SearchWloginController {
     public void close() {
         System.exit(0);
     }
+
+
+
 }
