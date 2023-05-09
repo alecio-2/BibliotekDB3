@@ -39,7 +39,6 @@ public class App extends Application {
         // Load the FXML file
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
 
-
         // Return the root node
         return fxmlLoader.load();
 

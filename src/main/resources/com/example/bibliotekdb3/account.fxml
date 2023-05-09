@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.AccountController">
+   <children>
+      <AnchorPane prefHeight="600.0" prefWidth="800.0">
+         <children>
+            <MenuBar layoutY="1.0">
+               <menus>
+                  <Menu mnemonicParsing="false" text="File">
+                     <items>
+                        <MenuItem fx:id="back" mnemonicParsing="false" onAction="#back" text="Back to HomePage" />
+                        <MenuItem fx:id="close" mnemonicParsing="false" onAction="#close" text="Close" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Edit">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                     </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+            <Button fx:id="showBorrows" layoutX="87.0" layoutY="56.0" mnemonicParsing="false" onAction="#showBorrows" text="Show borrows" />
+            <Button fx:id="showReserved" layoutX="207.0" layoutY="56.0" mnemonicParsing="false" onAction="#showReserved" text="Show reserved" />
+            <Button fx:id="are" layoutX="341.0" layoutY="56.0" mnemonicParsing="false" onAction="#are" text="Add/Remove/Edit" />
+            <TableView fx:id="results" layoutX="24.0" layoutY="99.0" prefHeight="474.0" prefWidth="751.0">
+              <columns>
+
+              </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
