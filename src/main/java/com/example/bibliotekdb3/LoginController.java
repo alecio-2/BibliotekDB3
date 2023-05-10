@@ -60,10 +60,10 @@ public class LoginController {
                 fName = rs.getString("fNamn");
 
                 loggedInUser = username; //Mazkin
-                UserSession.setCurrentUser(loggedInUser); //Mazkin - sets the current user in the UserSession class
+                UserSession.setCurrentUser(loggedInUser);
 
                 System.out.println("Welcome " + fName);
-                App.setRoot("searchWlogin.fxml");
+                App.setRoot("account.fxml");
                 System.out.println("Login successful");
             } else {
                 // User is not authenticated

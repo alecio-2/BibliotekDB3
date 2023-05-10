@@ -12,9 +12,8 @@ import javafx.scene.control.TableColumn; //M
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.Optional;
 
-public class SearchWloginController {
+public class xSearchWloginController {
     private Connection conn = DatabaseConnector.getConnection();
 
     String currentUser; // Mazkin
@@ -167,7 +166,8 @@ public class SearchWloginController {
     @FXML
     public void myAccount() throws IOException {
 
-        App.setRoot("account.fxml");
+       // App.setRoot("account.fxml");
+        App.setRoot("addRemoveEdit.fxml");
 
     }
 
