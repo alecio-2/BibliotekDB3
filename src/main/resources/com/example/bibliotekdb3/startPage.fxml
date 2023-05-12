@@ -8,15 +8,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.StartPageController">
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.StartPageController">
     <children>
-        <Pane layoutY="-1.0" prefHeight="600.0" prefWidth="800.0">
+        <Pane layoutY="-1.0" prefHeight="750.0" prefWidth="1000.0">
             <children>
-                <Button id="loginButtonSP" fx:id="loginButtonSP" layoutX="374.0" layoutY="248.0" mnemonicParsing="false" onAction="#loginSP" text="Login" />
+                <Button id="loginButtonSP" fx:id="loginButtonSP" layoutX="536.0" layoutY="391.0" mnemonicParsing="false" onAction="#loginSP" text="Login" />
 
-                <Button fx:id="searchButtonSP" layoutX="371.0" layoutY="192.0" mnemonicParsing="false" onAction="#searchSP" text="Search" />
-                <Label layoutX="224.0" layoutY="196.0" text="Search withoud login" />
-                <Label layoutX="133.0" layoutY="252.0" text="Login to search and be able to reserve" />
+                <Button fx:id="searchButtonSP" layoutX="533.0" layoutY="335.0" mnemonicParsing="false" onAction="#searchSP" text="Search" />
+                <Label layoutX="386.0" layoutY="339.0" text="Search withoud login" />
+                <Label layoutX="295.0" layoutY="395.0" text="Login to search and be able to reserve" />
             <MenuBar layoutY="2.0">
                <menus>
                   <Menu mnemonicParsing="false" text="File">

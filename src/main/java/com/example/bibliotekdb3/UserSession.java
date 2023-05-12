@@ -1,7 +1,9 @@
 package com.example.bibliotekdb3;
 
 public class UserSession {
+
     private static String currentUser;
+
     private static LoginController controller;
 
     public static String getCurrentUser() {

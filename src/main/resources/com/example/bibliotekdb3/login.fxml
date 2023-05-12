@@ -10,15 +10,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.LoginController">
+<AnchorPane id="AnchorPane" prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.LoginController">
     <children>
-        <Pane prefHeight="600.0" prefWidth="800.0">
+        <Pane prefHeight="750.0" prefWidth="1000.0">
             <children>
-                <Label layoutX="260.0" layoutY="203.0" text="Username" />
-                <Label layoutX="260.0" layoutY="256.0" text="Password" />
-                <TextField id="username" fx:id="usernameInput" layoutX="326.0" layoutY="203.0" promptText="username" />
-                <PasswordField id="password" fx:id="passwordInput" layoutX="326.0" layoutY="256.0" onAction="#login" promptText="password" />
-                <Button id="loginButton" fx:id="loginButton" layoutX="364.0" layoutY="309.0" mnemonicParsing="false" onAction="#login" text="Login" />
+                <Label layoutX="366.0" layoutY="244.0" text="Username" />
+                <Label layoutX="366.0" layoutY="297.0" text="Password" />
+                <TextField id="username" fx:id="usernameInput" layoutX="432.0" layoutY="244.0" promptText="username" />
+                <PasswordField id="password" fx:id="passwordInput" layoutX="432.0" layoutY="297.0" onAction="#login" promptText="password" />
+                <Button id="loginButton" fx:id="loginButton" layoutX="470.0" layoutY="350.0" mnemonicParsing="false" onAction="#login" text="Login" />
             </children>
         </Pane>
         <MenuBar layoutY="2.0">

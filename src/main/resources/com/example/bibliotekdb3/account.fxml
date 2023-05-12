@@ -9,9 +9,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.AccountController">
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.AccountController">
    <children>
-      <AnchorPane prefHeight="600.0" prefWidth="800.0">
+      <AnchorPane prefHeight="750.0" prefWidth="1000.0">
          <children>
             <MenuBar layoutY="1.0">
                <menus>
@@ -33,14 +33,14 @@
                   </Menu>
                </menus>
             </MenuBar>
-            <TableView fx:id="results" layoutX="14.0" layoutY="153.0" prefHeight="437.0" prefWidth="767.0" />
-            <TextField id="searchField" fx:id="searchField" layoutX="98.0" layoutY="101.0" onAction="#searchDB" prefHeight="26.0" prefWidth="500.0" promptText="Type in to search" />
-            <Button fx:id="searchButton" layoutX="614.0" layoutY="101.0" mnemonicParsing="false" onAction="#searchDB" text="Search" />
+            <TableView fx:id="results" layoutX="14.0" layoutY="153.0" prefHeight="588.0" prefWidth="967.0" />
+            <TextField id="searchField" fx:id="searchField" layoutX="98.0" layoutY="101.0" onAction="#searchDB" prefHeight="26.0" prefWidth="711.0" promptText="Type in to search" />
+            <Button fx:id="searchButton" layoutX="825.0" layoutY="102.0" mnemonicParsing="false" onAction="#searchDB" text="Search" />
             <Label layoutX="46.0" layoutY="105.0" text="Search" />
-            <Button id="add" fx:id="add" layoutX="471.0" layoutY="67.0" mnemonicParsing="false" onAction="#add" text="Add" />
-            <Button id="edit" fx:id="editButton" layoutX="518.0" layoutY="67.0" mnemonicParsing="false" onAction="#edit" text="Edit" />
-            <Button id="delete" fx:id="deleteButton" layoutX="564.0" layoutY="67.0" mnemonicParsing="false" onAction="#delete" text="Delete" />
-            <Button fx:id="borrow" layoutX="701.0" layoutY="101.0" mnemonicParsing="false" onAction="#borrow" text="Borrow" />
+            <Button id="add" fx:id="add" layoutX="665.0" layoutY="67.0" mnemonicParsing="false" onAction="#add" text="Add" />
+            <Button id="edit" fx:id="editButton" layoutX="712.0" layoutY="67.0" mnemonicParsing="false" onAction="#edit" text="Edit" />
+            <Button id="delete" fx:id="deleteButton" layoutX="758.0" layoutY="67.0" mnemonicParsing="false" onAction="#delete" text="Delete" />
+            <Button fx:id="borrow" layoutX="912.0" layoutY="102.0" mnemonicParsing="false" onAction="#borrow" text="Borrow" />
          </children>
       </AnchorPane>
       <Button fx:id="showBorrows" layoutX="97.0" layoutY="66.0" mnemonicParsing="false" onAction="#showBorrows" text="Show borrows" />

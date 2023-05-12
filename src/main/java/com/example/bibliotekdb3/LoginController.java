@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class LoginController {
     private Connection conn = DatabaseConnector.getConnection();
 
-    private static String loggedInUser = null; //Mazkin
+    private static String loggedInUser = null;
 
     @FXML
     private TextField usernameInput;
@@ -26,12 +26,6 @@ public class LoginController {
 
     @FXML
     private Button loginButton;
-
-    /**
-     * Initializes the controller class.
-     *
-     * @throws IOException
-     */
 
     @FXML
     public void login() throws IOException, SQLException {
@@ -80,21 +74,18 @@ public class LoginController {
         }
     }
 
-    public static String getLoggedInUser() { //Mazkin
+    public static String getLoggedInUser() {
         return loggedInUser;
-    }   //Mazkin
+    }
 
     @FXML
     public void back() throws IOException {
-
         App.setRoot("startPage.fxml");
-
     }
 
     @FXML
     public void close() {
         System.exit(0);
     }
-
 
 }

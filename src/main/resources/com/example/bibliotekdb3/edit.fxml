@@ -11,12 +11,12 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.editController">
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.EditController">
    <children>
-      <AnchorPane prefHeight="600.0" prefWidth="800.0">
+      <AnchorPane prefHeight="750.0" prefWidth="1000.0">
          <children>
-            <Label layoutX="354.0" layoutY="106.0" text="Edit the article" />
-            <Button fx:id="saveButton" layoutX="381.0" layoutY="459.0" mnemonicParsing="false" onAction="#save" text="Save" />
+            <Label layoutX="454.0" layoutY="186.0" text="Edit the article" />
+            <Button fx:id="saveButton" layoutX="481.0" layoutY="539.0" mnemonicParsing="false" onAction="#save" text="Save" />
             <MenuBar layoutX="-6.0" layoutY="2.0">
                <menus>
                   <Menu mnemonicParsing="false" text="File">
@@ -38,7 +38,7 @@
                   </Menu>
                </menus>
             </MenuBar>
-            <GridPane layoutX="300.0" layoutY="165.0">
+            <GridPane layoutX="400.0" layoutY="245.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -55,24 +55,24 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="artikelNr" />
-                  <Label text="sab" GridPane.rowIndex="1" />
-                  <Label text="titel" GridPane.rowIndex="2" />
-                  <Label text="artist" GridPane.rowIndex="3" />
-                  <Label text="utgava" GridPane.rowIndex="4" />
-                  <Label text="artikelGenre" GridPane.rowIndex="5" />
-                  <Label text="artikelKategori" GridPane.rowIndex="6" />
-                  <Label text="isbn" GridPane.rowIndex="7" />
-                  <Label text="statusTyp" GridPane.rowIndex="8" />
-                  <TextField fx:id="artikelNr" editable="false" GridPane.columnIndex="1" />
-                  <TextField fx:id="sab" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="titel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField fx:id="artist" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField fx:id="utgava" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField fx:id="artikelGenre" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField fx:id="artikelKategori" prefHeight="25.0" prefWidth="149.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <TextField fx:id="isbn" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                  <TextField fx:id="statusTyp" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                  <Label fx:id="artikelNrLabel" text="artikelNr" />
+                  <Label fx:id="sabLabel" text="sab" GridPane.rowIndex="1" />
+                  <Label fx:id="titelLabel" text="titel" GridPane.rowIndex="2" />
+                  <Label fx:id="artistLabel" text="artist" GridPane.rowIndex="3" />
+                  <Label fx:id="utgavaLabel" text="utgava" GridPane.rowIndex="4" />
+                  <Label fx:id="artikelGenreLabel" text="artikelGenre" GridPane.rowIndex="5" />
+                  <Label fx:id="artikelKategoriLabel" text="artikelKategori" GridPane.rowIndex="6" />
+                  <Label fx:id="isbnLabel" text="isbn" GridPane.rowIndex="7" />
+                  <Label fx:id="statusTypLabel" text="statusTyp" GridPane.rowIndex="8" />
+                  <TextField fx:id="artikelNrField" editable="false" GridPane.columnIndex="1" />
+                  <TextField fx:id="sabField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="titelField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="artistField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="utgavaField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="artikelGenreField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="artikelKategoriField" prefHeight="25.0" prefWidth="149.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField fx:id="isbnField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <TextField fx:id="statusTypField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                </children>
             </GridPane>
          </children>

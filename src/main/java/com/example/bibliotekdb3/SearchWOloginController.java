@@ -26,8 +26,7 @@ public class SearchWOloginController {
 
         try {
 
-            PreparedStatement stmt = conn.prepareStatement
-                    ("SELECT * FROM artikel WHERE artikelNr LIKE ? OR titel LIKE ? OR artist LIKE ? OR utgava LIKE ? OR artikelGenre LIKE ? OR artikelKategori LIKE ? OR isbn LIKE ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM artikel WHERE artikelNr LIKE ? OR titel LIKE ? OR artist LIKE ? OR utgava LIKE ? OR artikelGenre LIKE ? OR artikelKategori LIKE ? OR isbn LIKE ?");
             stmt.setString(1, "%" + searchStr + "%");
             stmt.setString(2, "%" + searchStr + "%");
             stmt.setString(3, "%" + searchStr + "%");
@@ -65,15 +64,12 @@ public class SearchWOloginController {
 
     @FXML
     public void back() throws IOException {
-
         App.setRoot("startPage.fxml");
-
     }
 
     @FXML
     public void close() {
         System.exit(0);
     }
-
 }
 
