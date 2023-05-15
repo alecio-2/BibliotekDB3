@@ -2,15 +2,14 @@ package com.example.bibliotekdb3;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.jar.JarEntry;
 
 public class ReturnController extends BaseController {
@@ -26,42 +25,52 @@ public class ReturnController extends BaseController {
     private Button returnButton;
 
     public void returnArticle() throws SQLException {
-        String currentUser = UserSession.getCurrentUser();
-        System.out.println("Return made by user number: " + currentUser);
-        System.out.println("Article returned: " + inputField.getText());
         String input = inputField.getText();
-        String sql1 = "SELECT lan.lanNr FROM lan JOIN lanartikel ON lan.lanNr = lanartikel.lanNr WHERE lan.anvandareNr = ? and lanartikel.artikelNr = ?;";
-        //String sql1 = "JOIN lanartikel ON lan.lanNr = lanartikel.lanNr
-        //WHERE lan.anvandareNr = 2 AND lanartikel.artikelNr = 1
-        //ORDER BY lanartikel.laneDatum DESC
-        //LIMIT 1;";
-        PreparedStatement stmt1 = conn.prepareStatement(sql1);
-        try {
-            stmt1.setString(1, currentUser);
-            stmt1.setString(2, input);
-            ResultSet rs = stmt1.executeQuery();
+        // Ask the user for confirmation
 
-            if (rs.next()) {
-                // Retrieve the value of lanNr from the result set
-                String currentLanNr = rs.getString("lanNr");
-                System.out.println("Current Lan Nr: " + currentLanNr);
+        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to return the article nr: " + input + "?");
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // User confirmed, add the new row to the table and database
+
+            String currentUser = UserSession.getCurrentUser();
+            System.out.println("Return made by user number: " + currentUser);
+            System.out.println("Article returned: " + inputField.getText());
+            //String input = inputField.getText();
+            String sql1 = "SELECT lan.lanNr FROM lan JOIN lanartikel ON lan.lanNr = lanartikel.lanNr WHERE lan.anvandareNr = ? and lanartikel.artikelNr = ?;";
+            //String sql1 = "JOIN lanartikel ON lan.lanNr = lanartikel.lanNr
+            //WHERE lan.anvandareNr = 2 AND lanartikel.artikelNr = 1
+            //ORDER BY lanartikel.laneDatum DESC
+            //LIMIT 1;";
+            PreparedStatement stmt1 = conn.prepareStatement(sql1);
+            try {
+                stmt1.setString(1, currentUser);
+                stmt1.setString(2, input);
+                ResultSet rs = stmt1.executeQuery();
+
+                if (rs.next()) {
+                    // Retrieve the value of lanNr from the result set
+                    String currentLanNr = rs.getString("lanNr");
+                    System.out.println("Current Lan Nr: " + currentLanNr);
 
 
+                    String sql = "INSERT INTO inlamningsdatum (lanNr, artikelNr, inlamningsDatum) VALUES (?, ?, ?)";
 
-                String sql = "INSERT INTO inlamningsdatum (lanNr, artikelNr, inlamningsDatum) VALUES (?, ?, ?)";
+                    PreparedStatement stmt = conn.prepareStatement(sql);
+                    stmt.setString(1, currentLanNr);
+                    stmt.setString(2, input);
+                    stmt.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
+                    stmt.executeUpdate();
 
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setString(1, currentLanNr);
-                stmt.setString(2, input);
-                stmt.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
-                stmt.executeUpdate();
+                    App.setRoot("account.fxml");
 
-                System.out.println("Article returned successfully.");
-            } else {
-                System.out.println("No active lanNr found for the current user.");
+                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Information", "Article returned successfully.");
+                } else {
+                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "No active lanNr found for the current user.");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class AddController extends BaseController  {
+public class AddController extends BaseController {
     private Connection conn = DatabaseConnector.getConnection();
 
     @FXML
@@ -48,11 +48,8 @@ public class AddController extends BaseController  {
     @FXML
     private void add() throws IOException, SQLException {
         // Ask the user for confirmation
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setHeaderText("Adding confirmation");
-        alert.setContentText("Are you sure you want to add the new row?");
-        Optional<ButtonType> result = alert.showAndWait();
 
+        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to add the new row?");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // User confirmed, add the new row to the table and database
 
@@ -76,9 +73,10 @@ public class AddController extends BaseController  {
                 // Execute the SQL statement
                 int rowsInserted = stmt.executeUpdate();
                 if (rowsInserted > 0) {
-                    System.out.println("A new row has been added to the table.");
+
+                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Information", "A new row has been added to the table.");
                 } else {
-                    System.out.println("No new rows have been added to the table.");
+                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "No new rows have been added to the table.");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
