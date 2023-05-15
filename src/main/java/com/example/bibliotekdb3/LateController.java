@@ -3,37 +3,41 @@ package com.example.bibliotekdb3;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 
-import java.io.IOException;
 import java.sql.*;
 
-public class SearchWOloginController extends BaseController {
+public class LateController extends BaseController{
     private Connection conn = DatabaseConnector.getConnection();
+    @FXML
+    private MenuItem back;
 
     @FXML
-    private TextField searchField;
+    private MenuItem backAccount;
 
     @FXML
-    private TableView searchResults;
+    private MenuItem close;
 
     @FXML
-    public void searchDB() throws SQLException {
-        String searchStr = searchField.getText();
+    private Button populateButton;
+
+    @FXML
+    private TableView  searchResults;
+
+
+    @FXML
+    public void populate() {
+
 
         try {
 
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM artikel WHERE artikelNr LIKE ? OR titel LIKE ? OR artist LIKE ? OR utgava LIKE ? OR artikelGenre LIKE ? OR artikelKategori LIKE ? OR isbn LIKE ?");
-            stmt.setString(1, "%" + searchStr + "%");
-            stmt.setString(2, "%" + searchStr + "%");
-            stmt.setString(3, "%" + searchStr + "%");
-            stmt.setString(4, "%" + searchStr + "%");
-            stmt.setString(5, "%" + searchStr + "%");
-            stmt.setString(6, "%" + searchStr + "%");
-            stmt.setString(7, "%" + searchStr + "%");
+            PreparedStatement stmt = conn.prepareStatement("SELECT lanartikel.artikelNr, lan.lanNr,artikel.titel, artikel.artist, anvandare.anvandareNr, anvandare.fNamn, anvandare.eNamn, anvandare.email, lanartikel.laneDatum, lanartikel.forfalloDatum FROM lanartikel JOIN lan ON lanartikel.lanNr = lan.lanNr JOIN artikel ON lanartikel.artikelNr = artikel.artikelNr JOIN anvandare ON lan.anvandareNr = anvandare.anvandareNr WHERE lanartikel.forfalloDatum < CURDATE()");
+
             ResultSet rs = stmt.executeQuery();
 
             // Create table columns based on metadata of result set
@@ -62,7 +66,4 @@ public class SearchWOloginController extends BaseController {
         }
     }
 
-
-
 }
-

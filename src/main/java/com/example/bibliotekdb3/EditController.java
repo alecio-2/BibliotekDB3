@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class EditController {
+public class EditController extends BaseController {
     private Connection conn = DatabaseConnector.getConnection();
 
     String currentUser; //
@@ -63,14 +63,6 @@ public class EditController {
     @FXML
     private TextField isbnField;
 
-    @FXML
-    private MenuItem back;
-
-    @FXML
-    private MenuItem backAccount;
-
-    @FXML
-    private MenuItem close;
 
 
     //Method to get the data from the selected row in the table and pass it to the TextFields
@@ -191,20 +183,7 @@ public class EditController {
 
     }
 
-    @FXML
-    public void backAccount(ActionEvent event) throws IOException {
-        App.setRoot("account.fxml");
-    }
 
-    @FXML
-    public void back(ActionEvent event) throws IOException {
-        App.setRoot("startPage.fxml");
-    }
-
-    @FXML
-    public void close() {
-        System.exit(0);
-    }
 
 }
 

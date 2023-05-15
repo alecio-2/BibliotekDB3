@@ -5,22 +5,19 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.StartPageController">
-    <children>
-        <Pane layoutY="-1.0" prefHeight="750.0" prefWidth="1000.0">
-            <children>
-                <Button id="loginButtonSP" fx:id="loginButtonSP" layoutX="536.0" layoutY="391.0" mnemonicParsing="false" onAction="#loginSP" text="Login" />
-
-                <Button fx:id="searchButtonSP" layoutX="533.0" layoutY="335.0" mnemonicParsing="false" onAction="#searchSP" text="Search" />
-                <Label layoutX="386.0" layoutY="339.0" text="Search withoud login" />
-                <Label layoutX="295.0" layoutY="395.0" text="Login to search and be able to reserve" />
-            <MenuBar layoutY="2.0">
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.LateController">
+   <children>
+      <AnchorPane>
+         <children>
+            <MenuBar layoutX="-6.0" layoutY="2.0">
                <menus>
                   <Menu mnemonicParsing="false" text="File">
                      <items>
+                        <MenuItem fx:id="back" mnemonicParsing="false" onAction="#back" text="Back to HomePage" />
+                        <MenuItem fx:id="backAccount" mnemonicParsing="false" onAction="#backAccount" text="Back to My Account" />
                         <MenuItem fx:id="close" mnemonicParsing="false" onAction="#close" text="Close" />
                      </items>
                   </Menu>
@@ -36,8 +33,10 @@
                   </Menu>
                </menus>
             </MenuBar>
-            </children>
-        </Pane>
-
-    </children>
+         </children>
+      </AnchorPane>
+      <Label layoutX="36.0" layoutY="56.0" text="Click to populate the table with late customers" />
+      <Button fx:id="populateButton" layoutX="312.0" layoutY="52.0" mnemonicParsing="false" onAction="#populate" text="Populate" />
+      <TableView fx:id="searchResults" layoutX="7.0" layoutY="98.0" prefHeight="646.0" prefWidth="988.0" />
+   </children>
 </AnchorPane>

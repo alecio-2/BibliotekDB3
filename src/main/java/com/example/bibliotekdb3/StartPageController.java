@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import java.io.IOException;
 import java.sql.Connection;
 
-public class StartPageController {
+public class StartPageController extends BaseController {
 
     private Connection conn = DatabaseConnector.getConnection();
 
@@ -25,13 +25,5 @@ public class StartPageController {
         App.setRoot("searchWOlogin.fxml");
     }
 
-    @FXML
-    public void back() throws IOException {
-        App.setRoot("startPage.fxml");
-    }
 
-    @FXML
-    public void close() {
-        System.exit(0);
-    }
 }

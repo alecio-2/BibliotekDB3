@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class AddController {
+public class AddController extends BaseController  {
     private Connection conn = DatabaseConnector.getConnection();
 
     @FXML
@@ -84,21 +84,6 @@ public class AddController {
                 e.printStackTrace();
             }
         }
-    }
-
-    @FXML
-    public void backAccount() throws IOException {
-        App.setRoot("account.fxml");
-    }
-
-    @FXML
-    public void back() throws IOException {
-        App.setRoot("startPage.fxml");
-    }
-
-    @FXML
-    public void close() {
-        System.exit(0);
     }
 
 }

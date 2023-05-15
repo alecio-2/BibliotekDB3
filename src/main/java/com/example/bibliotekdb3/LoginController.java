@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LoginController {
+public class LoginController extends BaseController {
     private Connection conn = DatabaseConnector.getConnection();
 
     private static String loggedInUser = null;
@@ -78,14 +78,6 @@ public class LoginController {
         return loggedInUser;
     }
 
-    @FXML
-    public void back() throws IOException {
-        App.setRoot("startPage.fxml");
-    }
 
-    @FXML
-    public void close() {
-        System.exit(0);
-    }
 
 }

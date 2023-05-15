@@ -41,6 +41,8 @@
             <Button id="edit" fx:id="editButton" layoutX="712.0" layoutY="67.0" mnemonicParsing="false" onAction="#edit" text="Edit" />
             <Button id="delete" fx:id="deleteButton" layoutX="758.0" layoutY="67.0" mnemonicParsing="false" onAction="#delete" text="Delete" />
             <Button fx:id="borrow" layoutX="912.0" layoutY="102.0" mnemonicParsing="false" onAction="#borrow" text="Borrow" />
+            <Button fx:id="returnArticle" layoutX="354.0" layoutY="67.0" mnemonicParsing="false" onAction="#returnArticle" text="Return article" />
+            <Button fx:id="lateButton" layoutX="510.0" layoutY="67.0" mnemonicParsing="false" onAction="#late" text="Show late clients" />
          </children>
       </AnchorPane>
       <Button fx:id="showBorrows" layoutX="97.0" layoutY="66.0" mnemonicParsing="false" onAction="#showBorrows" text="Show borrows" />

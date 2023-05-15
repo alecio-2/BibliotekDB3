@@ -22,11 +22,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
-public class AccountController {
+public class AccountController extends BaseController {
 
     private Connection conn = DatabaseConnector.getConnection();
 
     String currentUser;
+    @FXML
+    private Button lateButton;
 
     @FXML
     private Button add;
@@ -68,7 +70,9 @@ public class AccountController {
 
             String anvandareNr = currentUser; //Mazkin
             try {
-                PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, " + "ar.titel, ar.artist, ar.isbn " + "FROM anvandare a " + "JOIN lan l ON a.anvandareNr = l.anvandareNr " + "JOIN lanartikel la ON l.lanNr = la.lanNr " + "JOIN artikel ar ON la.artikelNr = ar.artikelNr " + "WHERE a.anvandareNr = ?");
+              //  PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, " + "ar.titel, ar.artist, ar.isbn " + "FROM anvandare a " + "JOIN lan l ON a.anvandareNr = l.anvandareNr " + "JOIN lanartikel la ON l.lanNr = la.lanNr " + "JOIN artikel ar ON la.artikelNr = ar.artikelNr " + "WHERE a.anvandareNr = ?");
+                //PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, ar.titel, ar.artist, ar.isbn FROM anvandare a JOIN lan l ON a.anvandareNr = l.anvandareNr JOIN lanartikel la ON l.lanNr = la.lanNr JOIN artikel ar ON la.artikelNr = ar.artikelNr WHERE a.anvandareNr = ?");
+                PreparedStatement stmt = conn.prepareStatement("SELECT anvandare.fNamn, lan.lanNr, artikel.artikelNr, lanartikel.laneDatum, lanartikel.forfalloDatum, artikel.titel, artikel.artist, artikel.isbn FROM anvandare JOIN lan  ON anvandare.anvandareNr = lan.anvandareNr JOIN lanartikel ON lan.lanNr = lanartikel.lanNr JOIN artikel ON lanartikel.artikelNr = artikel.artikelNr WHERE lan.anvandareNr = ? AND lanartikel.lanNr NOT IN (SELECT lanNr FROM inlamningsdatum)");
                 stmt.setInt(1, Integer.parseInt(anvandareNr));
                 ResultSet rs = stmt.executeQuery();
 
@@ -173,17 +177,19 @@ public class AccountController {
             String anvandareNr = currentUser;
 
             try {
-                PreparedStatement stmt = conn.prepareStatement("SELECT anvandareTyp FROM anvandare WHERE anvandareNr = ?");
+                PreparedStatement stmt = conn.prepareStatement("SELECT anstalldTyp FROM anstalld WHERE anvandareNr = ?");
                 stmt.setInt(1, Integer.parseInt(anvandareNr));
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
-                    String anvandareTyp = rs.getString("anvandareTyp");
-                    // Show/hide buttons based on anvandareTyp
-                    if (!"Anstalld".equals(anvandareTyp)) {
+                    String anvandareTyp = rs.getString("anstalldTyp");
+                    // Show/hide buttons based on anstalldTyp
+                    // Here we can develop furture funcitons based on the user type
+                    if (anvandareTyp != null && !"Bibliotekarie".equals(anvandareTyp)) {
                         add.setVisible(false);
                         editButton.setVisible(false);
                         deleteButton.setVisible(false);
+                        lateButton.setVisible(false);
                     }
                 }
             } catch (SQLException e) {
@@ -194,6 +200,16 @@ public class AccountController {
                 // Handle the exception
             }
         }
+    }
+
+    @FXML
+    public void returnArticle() throws IOException {
+        App.setRoot("return.fxml");
+    }
+
+    @FXML
+    public void late() throws IOException {
+        App.setRoot("late.fxml");
     }
 
     @FXML
@@ -353,6 +369,7 @@ public class AccountController {
                     alert.setTitle("Error");
                     alert.setHeaderText("Unable to borrow item");
                     alert.setContentText("An error occurred while borrowing the item.");
+                    alert.setContentText(e.getMessage());
                     alert.showAndWait();
                 }
 
@@ -389,15 +406,6 @@ public class AccountController {
         }
     }
 
-    @FXML
-    public void back() throws IOException {
-        App.setRoot("startPage.fxml");
-    }
-
-    @FXML
-    public void close() {
-        System.exit(0);
-    }
 
 }
 
