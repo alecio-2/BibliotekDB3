@@ -70,7 +70,7 @@ public class AccountController extends BaseController {
 
             String anvandareNr = currentUser; //Mazkin
             try {
-              //  PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, " + "ar.titel, ar.artist, ar.isbn " + "FROM anvandare a " + "JOIN lan l ON a.anvandareNr = l.anvandareNr " + "JOIN lanartikel la ON l.lanNr = la.lanNr " + "JOIN artikel ar ON la.artikelNr = ar.artikelNr " + "WHERE a.anvandareNr = ?");
+                //  PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, " + "ar.titel, ar.artist, ar.isbn " + "FROM anvandare a " + "JOIN lan l ON a.anvandareNr = l.anvandareNr " + "JOIN lanartikel la ON l.lanNr = la.lanNr " + "JOIN artikel ar ON la.artikelNr = ar.artikelNr " + "WHERE a.anvandareNr = ?");
                 //PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, ar.titel, ar.artist, ar.isbn FROM anvandare a JOIN lan l ON a.anvandareNr = l.anvandareNr JOIN lanartikel la ON l.lanNr = la.lanNr JOIN artikel ar ON la.artikelNr = ar.artikelNr WHERE a.anvandareNr = ?");
                 PreparedStatement stmt = conn.prepareStatement("SELECT anvandare.fNamn, lan.lanNr, artikel.artikelNr, lanartikel.laneDatum, lanartikel.forfalloDatum, artikel.titel, artikel.artist, artikel.isbn FROM anvandare JOIN lan  ON anvandare.anvandareNr = lan.anvandareNr JOIN lanartikel ON lan.lanNr = lanartikel.lanNr JOIN artikel ON lanartikel.artikelNr = artikel.artikelNr WHERE lan.anvandareNr = ? AND lanartikel.lanNr NOT IN (SELECT lanNr FROM inlamningsdatum)");
                 stmt.setInt(1, Integer.parseInt(anvandareNr));
@@ -181,16 +181,25 @@ public class AccountController extends BaseController {
                 stmt.setInt(1, Integer.parseInt(anvandareNr));
                 ResultSet rs = stmt.executeQuery();
 
+
                 if (rs.next()) {
                     String anvandareTyp = rs.getString("anstalldTyp");
                     // Show/hide buttons based on anstalldTyp
                     // Here we can develop furture funcitons based on the user type
-                    if (anvandareTyp != null && !"Bibliotekarie".equals(anvandareTyp)) {
+                    System.out.println("Anvandare typ: " + anvandareTyp);
+
+                    if (!"Bibliotekarie".equals(anvandareTyp)) {
+
                         add.setVisible(false);
                         editButton.setVisible(false);
                         deleteButton.setVisible(false);
                         lateButton.setVisible(false);
                     }
+                } else {
+                    add.setVisible(false);
+                    editButton.setVisible(false);
+                    deleteButton.setVisible(false);
+                    lateButton.setVisible(false);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
