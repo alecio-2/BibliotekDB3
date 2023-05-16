@@ -18,12 +18,21 @@ public class StartPageController extends BaseController {
     private Button searchButtonSP;
 
     public void loginSP() throws IOException {
-        App.setRoot("login.fxml");
+        try {
+            App.setRoot("login.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error in loginSP() from StartPageController class: " + e.getMessage());
+        }
     }
 
     public void searchSP() throws IOException {
-        App.setRoot("searchWOlogin.fxml");
+        try {
+            App.setRoot("searchWOlogin.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error in searchSP() from StartPageController class: " + e.getMessage());
+        }
     }
-
 
 }

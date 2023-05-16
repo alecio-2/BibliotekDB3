@@ -26,34 +26,40 @@ public class ReturnController extends BaseController {
 
     public void returnArticle() throws SQLException {
         String input = inputField.getText();
-        // Ask the user for confirmation
 
+        // Ask the user for confirmation
         Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to return the article nr: " + input + "?");
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // User confirmed, add the new row to the table and database
 
+            // User confirmed, add the new row to the table and database
             String currentUser = UserSession.getCurrentUser();
             System.out.println("Return made by user number: " + currentUser);
             System.out.println("Article returned: " + inputField.getText());
             //String input = inputField.getText();
             String sql1 = "SELECT lan.lanNr FROM lan JOIN lanartikel ON lan.lanNr = lanartikel.lanNr WHERE lan.anvandareNr = ? and lanartikel.artikelNr = ?;";
+
             //String sql1 = "JOIN lanartikel ON lan.lanNr = lanartikel.lanNr
             //WHERE lan.anvandareNr = 2 AND lanartikel.artikelNr = 1
             //ORDER BY lanartikel.laneDatum DESC
             //LIMIT 1;";
+
+
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
+
             try {
+
                 stmt1.setString(1, currentUser);
                 stmt1.setString(2, input);
                 ResultSet rs = stmt1.executeQuery();
 
+                //write the result of the query to a variable currentLanNr
                 if (rs.next()) {
                     // Retrieve the value of lanNr from the result set
                     String currentLanNr = rs.getString("lanNr");
                     System.out.println("Current Lan Nr: " + currentLanNr);
 
-
+                    // Insert the new row into the database
                     String sql = "INSERT INTO inlamningsdatum (lanNr, artikelNr, inlamningsDatum) VALUES (?, ?, ?)";
 
                     PreparedStatement stmt = conn.prepareStatement(sql);
@@ -62,6 +68,7 @@ public class ReturnController extends BaseController {
                     stmt.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
                     stmt.executeUpdate();
 
+                    // Return to the account page
                     App.setRoot("account.fxml");
 
                     BaseController.showAlert(Alert.AlertType.INFORMATION, "Information", "Article returned successfully.");
@@ -70,11 +77,14 @@ public class ReturnController extends BaseController {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                System.out.println("Error in returnArticle() in ReturnController class : " + e.getMessage());
             }
         }
     }
 
+}
 
+//unused code
 /*
     public void returnArticle() throws SQLException {
         String currentUser = UserSession.getCurrentUser();
@@ -118,4 +128,3 @@ public class ReturnController extends BaseController {
 
     }
 */
-}

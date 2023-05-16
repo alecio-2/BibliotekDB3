@@ -27,6 +27,7 @@ public class AccountController extends BaseController {
     private Connection conn = DatabaseConnector.getConnection();
 
     String currentUser;
+
     @FXML
     private Button lateButton;
 
@@ -63,15 +64,15 @@ public class AccountController extends BaseController {
     @FXML
     public void showBorrows() {
         // Get the current user
-        String currentUser = UserSession.getCurrentUser();  //Mazkin
-        System.out.println("Current user: " + currentUser);   //Mazkin
+        String currentUser = UserSession.getCurrentUser();
 
-        if (currentUser != null) { //Mazkin
+        // Check if the user is logged in
+        if (currentUser != null) {
 
-            String anvandareNr = currentUser; //Mazkin
+            String anvandareNr = currentUser;
             try {
-                //  PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, " + "ar.titel, ar.artist, ar.isbn " + "FROM anvandare a " + "JOIN lan l ON a.anvandareNr = l.anvandareNr " + "JOIN lanartikel la ON l.lanNr = la.lanNr " + "JOIN artikel ar ON la.artikelNr = ar.artikelNr " + "WHERE a.anvandareNr = ?");
-                //PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, ar.titel, ar.artist, ar.isbn FROM anvandare a JOIN lan l ON a.anvandareNr = l.anvandareNr JOIN lanartikel la ON l.lanNr = la.lanNr JOIN artikel ar ON la.artikelNr = ar.artikelNr WHERE a.anvandareNr = ?");
+                // PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, " + "ar.titel, ar.artist, ar.isbn " + "FROM anvandare a " + "JOIN lan l ON a.anvandareNr = l.anvandareNr " + "JOIN lanartikel la ON l.lanNr = la.lanNr " + "JOIN artikel ar ON la.artikelNr = ar.artikelNr " + "WHERE a.anvandareNr = ?");
+                // PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, ar.titel, ar.artist, ar.isbn FROM anvandare a JOIN lan l ON a.anvandareNr = l.anvandareNr JOIN lanartikel la ON l.lanNr = la.lanNr JOIN artikel ar ON la.artikelNr = ar.artikelNr WHERE a.anvandareNr = ?");
                 PreparedStatement stmt = conn.prepareStatement("SELECT anvandare.fNamn, lan.lanNr, artikel.artikelNr, lanartikel.laneDatum, lanartikel.forfalloDatum, artikel.titel, artikel.artist, artikel.isbn FROM anvandare JOIN lan  ON anvandare.anvandareNr = lan.anvandareNr JOIN lanartikel ON lan.lanNr = lanartikel.lanNr JOIN artikel ON lanartikel.artikelNr = artikel.artikelNr WHERE lan.anvandareNr = ? AND lanartikel.lanNr NOT IN (SELECT lanNr FROM inlamningsdatum)");
                 stmt.setInt(1, Integer.parseInt(anvandareNr));
                 ResultSet rs = stmt.executeQuery();
@@ -79,6 +80,7 @@ public class AccountController extends BaseController {
                 // Create table columns based on metadata of result set
                 results.getColumns().clear(); // Remove existing columns
                 ResultSetMetaData rsmd = rs.getMetaData();
+
                 int numCols = rsmd.getColumnCount();
                 for (int i = 0; i < numCols; i++) {
                     final int colIdx = i;
@@ -96,43 +98,39 @@ public class AccountController extends BaseController {
                     }
                     data.add(row);
                 }
+                // Display data in table
                 results.setItems(data);
 
             } catch (SQLException e) {
-                e.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("An error occurred while executing the query.");
-                alert.showAndWait();
+                // Handle the exception
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while executing the query.: " + e.getMessage());
             } catch (NumberFormatException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Invalid anvandareNr.");
-                alert.showAndWait();
+                // Handle the exception
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid anvandareNr: " + e.getMessage());
             }
         }
-        ;
+
     }
 
     @FXML
     public void showReserved() {
         // Get the current user
-        String currentUser = UserSession.getCurrentUser();  //Mazkin
-        System.out.println("Current user: " + currentUser);   //Mazkin
+        String currentUser = UserSession.getCurrentUser();
 
-        if (currentUser != null) { //Mazkin
+        // Check if the user is logged in
+        if (currentUser != null) {
 
-            String anvandareNr = currentUser; //Mazkin
+            String anvandareNr = currentUser;
             try {
                 PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, re.reservationNr, ar.artikelNr, re.reservationDatum, ar.titel, ar.artist, ar.isbn " + "FROM reservation re  " + "JOIN anvandare a ON a.anvandareNr = re.anvandareNr " + "JOIN artikel ar ON ar.artikelNr = re.artikelNr " + "WHERE a.anvandareNr = ?");
                 stmt.setInt(1, Integer.parseInt(anvandareNr));
+
                 ResultSet rs = stmt.executeQuery();
 
                 // Create table columns based on metadata of result set
                 results.getColumns().clear(); // Remove existing columns
                 ResultSetMetaData rsmd = rs.getMetaData();
+
                 int numCols = rsmd.getColumnCount();
                 for (int i = 0; i < numCols; i++) {
                     final int colIdx = i;
@@ -150,46 +148,45 @@ public class AccountController extends BaseController {
                     }
                     data.add(row);
                 }
+                // Display data in table
                 results.setItems(data);
 
             } catch (SQLException e) {
+                // Handle the exception
                 e.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("An error occurred while executing the query.");
-                alert.showAndWait();
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while executing the query.: " + e.getMessage());
             } catch (NumberFormatException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Invalid anvandareNr.");
-                alert.showAndWait();
+                // Handle the exception
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid anvandareNr: " + e.getMessage());
             }
         }
-        ;
+
     }
 
     @FXML
     public void initialize() {
+
+        // Connect to database
         String currentUser = UserSession.getCurrentUser();
         if (currentUser != null) {
             String anvandareNr = currentUser;
 
+            // Get the user type
             try {
                 PreparedStatement stmt = conn.prepareStatement("SELECT anstalldTyp FROM anstalld WHERE anvandareNr = ?");
                 stmt.setInt(1, Integer.parseInt(anvandareNr));
                 ResultSet rs = stmt.executeQuery();
 
-
+                //  Check if the user is a bibliotekarie
                 if (rs.next()) {
                     String anvandareTyp = rs.getString("anstalldTyp");
+
                     // Show/hide buttons based on anstalldTyp
                     // Here we can develop furture funcitons based on the user type
-                    System.out.println("Anvandare typ: " + anvandareTyp);
+                    //System.out.println("Anvandare typ: " + anvandareTyp);
 
+                    // If the user is not a bibliotekarie, hide the buttons
                     if (!"Bibliotekarie".equals(anvandareTyp)) {
-
                         add.setVisible(false);
                         editButton.setVisible(false);
                         deleteButton.setVisible(false);
@@ -201,24 +198,39 @@ public class AccountController extends BaseController {
                     deleteButton.setVisible(false);
                     lateButton.setVisible(false);
                 }
+
             } catch (SQLException e) {
-                e.printStackTrace();
                 // Handle the exception
+                System.out.println("Error initializing the user: " + e.getMessage());
+                e.printStackTrace();
+
             } catch (NumberFormatException e) {
-                e.printStackTrace();
                 // Handle the exception
+                System.out.println("Error initializing the user: " + e.getMessage());
+                e.printStackTrace();
+
             }
         }
     }
 
     @FXML
     public void returnArticle() throws IOException {
-        App.setRoot("return.fxml");
+        try {
+            App.setRoot("return.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     @FXML
     public void late() throws IOException {
-        App.setRoot("late.fxml");
+        try {
+            App.setRoot("late.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -228,41 +240,50 @@ public class AccountController extends BaseController {
 
     @FXML
     public void edit() throws IOException {
+        try {
+            // Get the selected row
+            ObservableList<String> selectedRow = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
+            if (selectedRow == null) {
 
-        // Get the selected row
-        ObservableList<String> selectedRow = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
-        if (selectedRow == null) {
-            // No row selected, do nothing
-            return;
-        } else {
+                // Show an alert if no row is selected
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Please select a row to edit.");
+                return;
 
+            } else {
 
-            String artikelNr = selectedRow.get(0); //artikelNr
-            String sab = selectedRow.get(1); // sab
-            String titel = selectedRow.get(2); // titel
-            String artist = selectedRow.get(3); // artist
-            String utgava = selectedRow.get(4); // utgava
-            String artikelGenre = selectedRow.get(5); // artikelGenre
-            String artikelKategori = selectedRow.get(6); // artikelKategori
-            String isbn = selectedRow.get(7); // ISBN
-            String statusTyp = selectedRow.get(8); // statusTyp
+                // Get the data from the selected row
+                String artikelNr = selectedRow.get(0); //artikelNr
+                String sab = selectedRow.get(1); // sab
+                String titel = selectedRow.get(2); // titel
+                String artist = selectedRow.get(3); // artist
+                String utgava = selectedRow.get(4); // utgava
+                String artikelGenre = selectedRow.get(5); // artikelGenre
+                String artikelKategori = selectedRow.get(6); // artikelKategori
+                String isbn = selectedRow.get(7); // ISBN
+                String statusTyp = selectedRow.get(8); // statusTyp
 
-            // Open the edit window
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("edit.fxml"));
-            Parent editRoot = loader.load();
+                // Open the edit window
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("edit.fxml"));
+                Parent editRoot = loader.load();
 
-            // Pass the data to the controller
-            EditController editController = loader.getController();
-            editController.receiveDetails(artikelNr, sab, titel, artist, utgava, artikelGenre, artikelKategori, isbn, statusTyp);
+                // Pass the data to the controller
+                EditController editController = loader.getController();
+                editController.receiveDetails(artikelNr, sab, titel, artist, utgava, artikelGenre, artikelKategori, isbn, statusTyp);
 
-            /*// Show the window
-            Stage stage = new Stage();
-            stage.setScene(new Scene(editRoot));
-            stage.show();*/
+                /*
+                // Show the scene into a new window
+                Stage stage = new Stage();
+                stage.setScene(new Scene(editRoot));
+                stage.show();
+                */
 
-            // Replace the content of the current window with edit.fxml content
-            Scene scene = results.getScene();
-            scene.setRoot(editRoot);
+                // Replace the content of the current window with edit.fxml content
+                Scene scene = results.getScene();
+                scene.setRoot(editRoot);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error in edit() from AccountController class: " + e.getMessage());
         }
     }
 
@@ -271,7 +292,8 @@ public class AccountController extends BaseController {
         // Get the selected row
         ObservableList<String> selectedRow = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
         if (selectedRow == null) {
-            // No row selected, do nothing
+            // Show an alert if no row is selected
+            BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Please select a row to delete.");
             return;
         }
 
@@ -279,10 +301,7 @@ public class AccountController extends BaseController {
         String title = selectedRow.get(2); // assuming the title is in the third column
 
         // Ask the user for confirmation
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setHeaderText("Delete Book");
-        alert.setContentText("Are you sure you want to delete \"" + title + "\"?");
-        Optional<ButtonType> result = alert.showAndWait();
+        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Delete Book", "Are you sure you want to delete \"" + title + "\"?");
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // User confirmed, delete the row from the table and database
@@ -291,7 +310,9 @@ public class AccountController extends BaseController {
                 stmt.setInt(1, Integer.parseInt(selectedRow.get(0))); // assuming the article number is in the first column
                 stmt.executeUpdate();
                 results.getItems().remove(selectedRow);
+                BaseController.showAlert(Alert.AlertType.INFORMATION, "Success", "The book \"" + title + "\" was deleted successfully.");
             } catch (SQLException e) {
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while deleting the book.");
                 e.printStackTrace();
             }
         }
@@ -313,6 +334,7 @@ public class AccountController extends BaseController {
             stmt.setString(6, "%" + searchStr + "%");
             stmt.setString(7, "%" + searchStr + "%");
             ResultSet rs = stmt.executeQuery();
+
             // Create table columns based on metadata of result set
             results.getColumns().clear(); // Remove existing columns
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -333,29 +355,31 @@ public class AccountController extends BaseController {
                 }
                 data.add(row);
             }
+            // Add the data to the table
             results.setItems(data);
 
         } catch (SQLException e) {
+            System.out.println("Error loading the table: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     @FXML
     public void borrow() {
-
+        // Ask the user for confirmation
         Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to borrow this article?");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // Get the current user
             String currentUser = UserSession.getCurrentUser();
             System.out.println("Current user: " + currentUser);
-
+            // Get the selected row
             ObservableList<String> selectedItem = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 String artikelNr = selectedItem.get(0);
 
 
                 if (currentUser != null) {
-
+                    // Get the current user
                     String anvandareNr = currentUser;
                     try {
                         // Insert into lan table
@@ -374,10 +398,10 @@ public class AccountController extends BaseController {
                         stmt2.setString(2, artikelNr);
                         stmt2.executeUpdate();
 
+                        // Get information about the borrowed article
                         BaseController.showAlert(Alert.AlertType.INFORMATION, "Information", "Successfully borrowed item with artikelNr: " + artikelNr + " to anvandareNr: " + anvandareNr);
                     } catch (SQLException e) {
                         e.printStackTrace();
-
                         BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", e.getMessage());
                     }
 
@@ -414,11 +438,13 @@ public class AccountController extends BaseController {
 }
 
 //Unused code
+/*
+      @FXML
+     private TableView<?> results;
 
-    /*  @FXML
-     private TableView<?> results;*/
+
 //search method normal
-   /* @FXML
+   @FXML
     public void searchDB() {
 
         String searchStr = searchField.getText();
@@ -461,10 +487,10 @@ public class AccountController extends BaseController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
 //edit method with editable row and delete button on each row
-   /* public void edit() {
+    public void edit() {
 
         String searchStr = searchField.getText();
 
@@ -560,10 +586,10 @@ public class AccountController extends BaseController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
 //edit method with editable rows
-   /* public void edit() {
+    public void edit() {
 
         String searchStr = searchField.getText();
 
@@ -629,10 +655,9 @@ public class AccountController extends BaseController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
-
-
+*/
 
 
 

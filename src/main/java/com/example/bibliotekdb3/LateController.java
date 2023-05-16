@@ -35,7 +35,7 @@ public class LateController extends BaseController{
 
 
         try {
-
+            // Create prepared statement
             PreparedStatement stmt = conn.prepareStatement("SELECT lanartikel.artikelNr, lan.lanNr,artikel.titel, artikel.artist, anvandare.anvandareNr, anvandare.fNamn, anvandare.eNamn, anvandare.email, lanartikel.laneDatum, lanartikel.forfalloDatum FROM lanartikel JOIN lan ON lanartikel.lanNr = lan.lanNr JOIN artikel ON lanartikel.artikelNr = artikel.artikelNr JOIN anvandare ON lan.anvandareNr = anvandare.anvandareNr WHERE lanartikel.forfalloDatum < CURDATE()");
 
             ResultSet rs = stmt.executeQuery();
@@ -43,6 +43,7 @@ public class LateController extends BaseController{
             // Create table columns based on metadata of result set
             searchResults.getColumns().clear(); // Remove existing columns
             ResultSetMetaData rsmd = rs.getMetaData();
+
             int numCols = rsmd.getColumnCount();
             for (int i = 0; i < numCols; i++) {
                 final int colIdx = i;
@@ -60,9 +61,12 @@ public class LateController extends BaseController{
                 }
                 data.add(row);
             }
+            // Populate table
             searchResults.setItems(data);
+
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Error on populating the table with late loans: " + e);
         }
     }
 

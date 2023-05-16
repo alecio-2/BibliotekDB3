@@ -25,7 +25,7 @@ public class SearchWOloginController extends BaseController {
         String searchStr = searchField.getText();
 
         try {
-
+            // Create prepared statement with parameterized query
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM artikel WHERE artikelNr LIKE ? OR titel LIKE ? OR artist LIKE ? OR utgava LIKE ? OR artikelGenre LIKE ? OR artikelKategori LIKE ? OR isbn LIKE ?");
             stmt.setString(1, "%" + searchStr + "%");
             stmt.setString(2, "%" + searchStr + "%");
@@ -56,9 +56,11 @@ public class SearchWOloginController extends BaseController {
                 }
                 data.add(row);
             }
+
             searchResults.setItems(data);
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Error on searchDB() from SearchWOloginController.");
         }
     }
 

@@ -14,6 +14,7 @@ public class DatabaseConnector {
         try {
             conn = DriverManager.getConnection(url, user, password);
         } catch (SQLException ex) {
+            System.out.println("Database connection failed");
             throw new RuntimeException(ex);
         }
     }
@@ -21,4 +22,5 @@ public class DatabaseConnector {
     public static Connection getConnection() {
         return conn;
     }
+
 }

@@ -3,6 +3,7 @@ package com.example.bibliotekdb3;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -56,12 +57,13 @@ public class LoginController extends BaseController {
                 loggedInUser = username; //Mazkin
                 UserSession.setCurrentUser(loggedInUser);
 
-                System.out.println("Welcome " + fName);
+              //  System.out.println("Welcome " + fName);
                 App.setRoot("account.fxml");
                 System.out.println("Login successful");
             } else {
                 // User is not authenticated
                 System.out.println("Error: Invalid username or password");
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid username or password");
             }
         } finally {
             // Close the result set and prepared statement
@@ -75,7 +77,12 @@ public class LoginController extends BaseController {
     }
 
     public static String getLoggedInUser() {
+        try {
         return loggedInUser;
+        } catch (Exception e) {
+            System.out.println("Error in getLoggedInUser() from LoginController class: " + e.getMessage());
+            return null;
+        }
     }
 
 
