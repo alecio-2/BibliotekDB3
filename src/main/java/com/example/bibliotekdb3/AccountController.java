@@ -49,6 +49,7 @@ public class AccountController extends BaseController {
     @FXML
     private TableView results;
 
+
     @FXML
     private Button showBorrows;
 
@@ -122,7 +123,7 @@ public class AccountController extends BaseController {
 
             String anvandareNr = currentUser;
             try {
-                PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, re.reservationNr, ar.artikelNr, re.reservationDatum, ar.titel, ar.artist, ar.isbn " + "FROM reservation re  " + "JOIN anvandare a ON a.anvandareNr = re.anvandareNr " + "JOIN artikel ar ON ar.artikelNr = re.artikelNr " + "WHERE a.anvandareNr = ?");
+                PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, re.reservationNr, ar.artikelNr, re.reservationDatum, ar.titel, ar.artist, ar.isbn FROM reservation re  JOIN anvandare a ON a.anvandareNr = re.anvandareNr JOIN artikel ar ON ar.artikelNr = re.artikelNr WHERE a.anvandareNr = ?");
                 stmt.setInt(1, Integer.parseInt(anvandareNr));
 
                 ResultSet rs = stmt.executeQuery();
@@ -434,6 +435,8 @@ public class AccountController extends BaseController {
             }
         }
     }
+
+
 
 }
 

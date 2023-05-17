@@ -44,7 +44,6 @@ public class ReturnController extends BaseController {
             //ORDER BY lanartikel.laneDatum DESC
             //LIMIT 1;";
 
-
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
 
             try {
@@ -81,6 +80,7 @@ public class ReturnController extends BaseController {
             }
         }
     }
+
 
 }
 

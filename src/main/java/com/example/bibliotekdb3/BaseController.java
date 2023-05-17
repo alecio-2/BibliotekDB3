@@ -17,7 +17,7 @@ public class BaseController {
         }
     }
 
-    public void back() throws IOException {
+    public void backHome() throws IOException {
         try {
             App.setRoot("startPage.fxml");
         } catch (IOException e) {
@@ -62,6 +62,5 @@ public class BaseController {
             return Optional.empty();
         }
     }
-
 
 }
