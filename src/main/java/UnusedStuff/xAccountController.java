@@ -1,5 +1,8 @@
-package com.example.bibliotekdb3;
+/*package UnusedStuff;
 
+import com.example.bibliotekdb3.App;
+import com.example.bibliotekdb3.DatabaseConnector;
+import com.example.bibliotekdb3.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -176,4 +179,4 @@ public class xAccountController {
 
 }
 
-
+*/

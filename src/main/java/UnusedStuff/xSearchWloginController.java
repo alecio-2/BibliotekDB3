@@ -1,5 +1,8 @@
-package com.example.bibliotekdb3;
+/*/package UnusedStuff;
 
+import com.example.bibliotekdb3.App;
+import com.example.bibliotekdb3.DatabaseConnector;
+import com.example.bibliotekdb3.UserSession;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -124,7 +127,7 @@ public class xSearchWloginController {
                     alert.setHeaderText("Unable to borrow item");
                     alert.setContentText("An error occurred while borrowing the item.");
                     alert.showAndWait();
-                }
+                }*/
 
           /*  String sab = selectedItem.get(1);
             String titel = selectedItem.get(2);
@@ -147,7 +150,7 @@ public class xSearchWloginController {
             System.out.println("logged in as: " + username );
             System.out.println("--------------------------");*/
 
-            }
+    /*        }
         } else {
             //No item is selected, show an error message to the user
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -187,3 +190,4 @@ public class xSearchWloginController {
 
 
 }
+*/
