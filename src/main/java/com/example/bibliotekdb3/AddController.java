@@ -45,6 +45,8 @@ public class AddController extends BaseController {
     @FXML
     private TextField utgava;
 
+
+
     @FXML
     private void add() throws IOException, SQLException {
 
@@ -86,5 +88,5 @@ public class AddController extends BaseController {
     }
 
 
-    }
+}
 

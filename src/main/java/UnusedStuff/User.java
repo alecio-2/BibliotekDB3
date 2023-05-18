@@ -1,28 +1,18 @@
-package com.example.bibliotekdb3;
+/*package com.example.bibliotekdb3;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-
-import java.io.IOException;
 import java.sql.*;
 
-public class SearchWOloginController extends BaseController  {
-    private Connection conn = DatabaseConnector.getConnection();
+public interface User  {
 
-    @FXML
-    private TextField searchField;
-
-    @FXML
-    private TableView results;
-
-    @FXML
-    public void searchDB() {
-
+    public static void searchDB(TextField searchField, TableView results) {
+        Connection conn = DatabaseConnector.getConnection();
         String searchStr = searchField.getText();
         try {
 
@@ -63,8 +53,5 @@ public class SearchWOloginController extends BaseController  {
             System.out.println("Error loading the table: " + e.getMessage());
         }
     }
-
-
-
 }
-
+*/

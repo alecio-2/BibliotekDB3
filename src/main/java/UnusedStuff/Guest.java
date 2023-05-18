@@ -1,31 +1,22 @@
-package com.example.bibliotekdb3;
+/*package com.example.bibliotekdb3;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-import java.io.IOException;
 import java.sql.*;
 
-public class SearchWOloginController extends BaseController  {
-    private Connection conn = DatabaseConnector.getConnection();
+public interface Guest {
 
-    @FXML
-    private TextField searchField;
-
-    @FXML
-    private TableView results;
-
-    @FXML
-    public void searchDB() {
-
+    public static void searchDB(TextField searchField, TableView results) {
+        Connection conn = DatabaseConnector.getConnection();
         String searchStr = searchField.getText();
-        try {
 
+        try {
+            // Create prepared statement with parameterized query
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM artikel WHERE artikelNr LIKE ? OR titel LIKE ? OR artist LIKE ? OR utgava LIKE ? OR artikelGenre LIKE ? OR artikelKategori LIKE ? OR isbn LIKE ?");
             stmt.setString(1, "%" + searchStr + "%");
             stmt.setString(2, "%" + searchStr + "%");
@@ -56,15 +47,11 @@ public class SearchWOloginController extends BaseController  {
                 }
                 data.add(row);
             }
-            // Add the data to the table
             results.setItems(data);
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error loading the table: " + e.getMessage());
+            System.out.println("Error on searchDB() from SearchWOloginController.");
         }
     }
-
-
-
 }
-
+*/

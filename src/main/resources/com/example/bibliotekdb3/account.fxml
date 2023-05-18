@@ -43,6 +43,7 @@
             <Button fx:id="borrow" layoutX="912.0" layoutY="102.0" mnemonicParsing="false" onAction="#borrow" text="Borrow" />
             <Button fx:id="returnArticle" layoutX="354.0" layoutY="67.0" mnemonicParsing="false" onAction="#returnArticle" text="Return article" />
             <Button fx:id="lateButton" layoutX="510.0" layoutY="67.0" mnemonicParsing="false" onAction="#late" text="Show late clients" />
+            <TextField fx:id="userMessage" alignment="CENTER" editable="false" layoutX="329.0" layoutY="13.0" prefHeight="26.0" prefWidth="342.0" promptText="Vällkomen Alexandru. Du är inloggat som forskare." />
          </children>
       </AnchorPane>
       <Button fx:id="showBorrows" layoutX="97.0" layoutY="66.0" mnemonicParsing="false" onAction="#showBorrows" text="Show borrows" />

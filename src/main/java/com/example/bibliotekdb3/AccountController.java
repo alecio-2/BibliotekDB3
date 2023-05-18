@@ -1,12 +1,9 @@
 package com.example.bibliotekdb3;
 
-import com.example.bibliotekdb3.EditController;
-
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,11 +19,22 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
+
+
 public class AccountController extends BaseController {
 
     private Connection conn = DatabaseConnector.getConnection();
 
     String currentUser;
+    private String fNamn;
+
+    public void setfNamn(String fNamn) {
+        this.fNamn = fNamn;
+    }
+
+
+    @FXML
+    private TextField userMessage;
 
     @FXML
     private Button lateButton;
@@ -48,7 +56,6 @@ public class AccountController extends BaseController {
 
     @FXML
     private TableView results;
-
 
     @FXML
     private Button showBorrows;
@@ -166,53 +173,86 @@ public class AccountController extends BaseController {
 
     @FXML
     public void initialize() {
-
-        // Connect to database
         String currentUser = UserSession.getCurrentUser();
-        if (currentUser != null) {
-            String anvandareNr = currentUser;
 
-            // Get the user type
+        if (currentUser != null) {
             try {
-                PreparedStatement stmt = conn.prepareStatement("SELECT anstalldTyp FROM anstalld WHERE anvandareNr = ?");
-                stmt.setInt(1, Integer.parseInt(anvandareNr));
+                PreparedStatement stmt = conn.prepareStatement("SELECT anvandareTyp FROM anvandare WHERE anvandareNr = ?");
+                stmt.setInt(1, Integer.parseInt(currentUser));
                 ResultSet rs = stmt.executeQuery();
 
-                //  Check if the user is a bibliotekarie
                 if (rs.next()) {
-                    String anvandareTyp = rs.getString("anstalldTyp");
+                    String anvandareTyp = rs.getString("anvandareTyp");
+                    AnvandareMessage anvandareMessage = null;
 
-                    // Show/hide buttons based on anstalldTyp
-                    // Here we can develop furture funcitons based on the user type
-                    //System.out.println("Anvandare typ: " + anvandareTyp);
+                    switch (anvandareTyp) {
+                        case "Student":
+                            anvandareMessage = new StudentAnvandare();
 
-                    // If the user is not a bibliotekarie, hide the buttons
-                    if (!"Bibliotekarie".equals(anvandareTyp)) {
-                        add.setVisible(false);
-                        editButton.setVisible(false);
-                        deleteButton.setVisible(false);
-                        lateButton.setVisible(false);
+                            break;
+                        case "Anstalld":
+
+                            PreparedStatement stmt1 = conn.prepareStatement("SELECT anstalldTyp FROM anstalld WHERE anvandareNr = ?");
+                            stmt1.setInt(1, Integer.parseInt(currentUser));
+                            ResultSet rs1 = stmt1.executeQuery();
+                            if (rs1.next() && rs1.getString("anstalldTyp").equals("Bibliotekarie")) {
+                                anvandareMessage = new BibliotekarieAnvandare();
+                            } else {
+                                anvandareMessage = new AnstalldAnvandare();
+                            }
+
+
+                            break;
+                        case "Larare":
+                            anvandareMessage = new LarareAnvandare();
+
+                            break;
+                        case "Forskare":
+                            anvandareMessage = new ForskareAnvandare();
+
+                            break;
+                        default:
+                            System.out.println("Invalid anvandareTyp");
+
+                            break;
                     }
-                } else {
-                    add.setVisible(false);
-                    editButton.setVisible(false);
-                    deleteButton.setVisible(false);
-                    lateButton.setVisible(false);
+
+                    if (anvandareMessage != null) {
+                       anvandareMessage.printMessage(LoginController.getfNamn());
+                   }
                 }
-
-            } catch (SQLException e) {
-                // Handle the exception
+            } catch (SQLException | NumberFormatException e) {
                 System.out.println("Error initializing the user: " + e.getMessage());
                 e.printStackTrace();
-
-            } catch (NumberFormatException e) {
-                // Handle the exception
-                System.out.println("Error initializing the user: " + e.getMessage());
-                e.printStackTrace();
-
             }
         }
+
+        if (currentUser != null) {
+            try {
+                PreparedStatement stmt = conn.prepareStatement("SELECT anstalldTyp FROM anstalld WHERE anvandareNr = ?");
+                stmt.setInt(1, Integer.parseInt(currentUser));
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next() && rs.getString("anstalldTyp").equals("Bibliotekarie")) {
+
+                    // User is a librarian, show the buttons
+
+                    return;
+                }
+            } catch (SQLException | NumberFormatException e) {
+                System.out.println("Error initializing the user: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        // User is not a librarian or not logged in, hide the buttons
+        add.setVisible(false);
+        editButton.setVisible(false);
+        deleteButton.setVisible(false);
+        lateButton.setVisible(false);
+
     }
+
 
     @FXML
     public void returnArticle() throws IOException {
@@ -319,11 +359,11 @@ public class AccountController extends BaseController {
         }
     }
 
+
     @FXML
     public void searchDB() {
 
         String searchStr = searchField.getText();
-
         try {
 
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM artikel WHERE artikelNr LIKE ? OR titel LIKE ? OR artist LIKE ? OR utgava LIKE ? OR artikelGenre LIKE ? OR artikelKategori LIKE ? OR isbn LIKE ?");
@@ -358,13 +398,99 @@ public class AccountController extends BaseController {
             }
             // Add the data to the table
             results.setItems(data);
-
         } catch (SQLException e) {
-            System.out.println("Error loading the table: " + e.getMessage());
             e.printStackTrace();
+            System.out.println("Error loading the table: " + e.getMessage());
         }
     }
 
+
+    //new borrow with receipt
+    public void borrow() {
+        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to borrow this article?");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            String currentUser = UserSession.getCurrentUser();
+            System.out.println("Current user: " + currentUser);
+            ObservableList<String> selectedItem = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                String artikelNr = selectedItem.get(0);
+                if (currentUser != null) {
+                    String anvandareNr = currentUser;
+                    try {
+                        // Insert into 'lan' table
+                        PreparedStatement insertLanStmt = conn.prepareStatement("INSERT INTO lan (anvandareNr) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+                        insertLanStmt.setString(1, anvandareNr);
+                        insertLanStmt.executeUpdate();
+
+                        ResultSet rs = insertLanStmt.getGeneratedKeys();
+                        rs.next();
+                        int lanNr = rs.getInt(1);
+
+                        // Insert into 'lanartikel' table
+                        PreparedStatement insertLanArtikelStmt = conn.prepareStatement("INSERT INTO lanartikel (lanNr, artikelNr) VALUES (?, ?)");
+                        insertLanArtikelStmt.setInt(1, lanNr);
+                        insertLanArtikelStmt.setString(2, artikelNr);
+                        insertLanArtikelStmt.executeUpdate();
+
+                        // Query to retrieve inlamningsDatum, laneDatum, and forfalloDatum
+                        PreparedStatement query = conn.prepareStatement("SELECT lanartikel.laneDatum, lanartikel.forfalloDatum " +
+                                "FROM bibliotek.lanartikel " +
+                                "WHERE lanartikel.lanNr = ? AND lanartikel.artikelNr = ?");
+                        query.setInt(1, lanNr);
+                        query.setString(2, artikelNr);
+                        ResultSet resultSet = query.executeQuery();
+
+                        // Move the cursor to the first row
+                        if (resultSet.next()) {
+                            // Extract data from the result set
+                            String laneDatum = resultSet.getString("laneDatum");
+                            String forfalloDatum = resultSet.getString("forfalloDatum");
+
+                            // Show the receipt with the retrieved data
+                            String sab = selectedItem.get(1);
+                            String titel = selectedItem.get(2);
+                            String artist = selectedItem.get(3);
+                            String utgava = selectedItem.get(4);
+                            String artikelGenre = selectedItem.get(5);
+                            String artikelKategori = selectedItem.get(6);
+                            String isbn = selectedItem.get(7);
+                            String statusTyp = selectedItem.get(8);
+
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("receipt.fxml"));
+                            Parent root = loader.load();
+
+                            // Obtain the correct controller
+                            ReceiptController receiptController = loader.getController();
+                            receiptController.setReceiptData(anvandareNr, artikelGenre, artikelKategori, artist, isbn, utgava, artikelNr, sab, titel, forfalloDatum, laneDatum);
+
+                            Stage receiptStage = new Stage();
+                            receiptStage.setTitle("Receipt");
+                            receiptStage.setScene(new Scene(root));
+                            receiptStage.show();
+                        } else {
+                            // No data found
+                            throw new RuntimeException("No data found in the result set.");
+                        }
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            } else {
+                BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "Please select an item to borrow.");
+            }
+        }
+    }
+
+
+
+
+}
+
+
+//good borrow (old)
+    /*
     @FXML
     public void borrow() {
         // Ask the user for confirmation
@@ -406,7 +532,7 @@ public class AccountController extends BaseController {
                         BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", e.getMessage());
                     }
 
-       /*     String sab = selectedItem.get(1);
+            String sab = selectedItem.get(1);
             String titel = selectedItem.get(2);
             String artist = selectedItem.get(3);
             String utgava = selectedItem.get(4);
@@ -426,7 +552,7 @@ public class AccountController extends BaseController {
             System.out.println("statusTyp: " + statusTyp);
 
             System.out.println("--------------------------");
-*/
+
 
                 }
             } else {
@@ -435,232 +561,11 @@ public class AccountController extends BaseController {
             }
         }
     }
-
-
-
-}
-
-//Unused code
-/*
-      @FXML
-     private TableView<?> results;
-
-
-//search method normal
-   @FXML
-    public void searchDB() {
-
-        String searchStr = searchField.getText();
-
-        try {
-
-            PreparedStatement stmt = conn.prepareStatement
-                    ("SELECT * FROM artikel WHERE artikelNr LIKE ? OR titel LIKE ? OR artist LIKE ? OR utgava LIKE ? OR artikelGenre LIKE ? OR artikelKategori LIKE ? OR isbn LIKE ?");
-            stmt.setString(1, "%" + searchStr + "%");
-            stmt.setString(2, "%" + searchStr + "%");
-            stmt.setString(3, "%" + searchStr + "%");
-            stmt.setString(4, "%" + searchStr + "%");
-            stmt.setString(5, "%" + searchStr + "%");
-            stmt.setString(6, "%" + searchStr + "%");
-            stmt.setString(7, "%" + searchStr + "%");
-            ResultSet rs = stmt.executeQuery();
-            // Create table columns based on metadata of result set
-            results.getColumns().clear(); // Remove existing columns
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int numCols = rsmd.getColumnCount();
-            for (int i = 0; i < numCols; i++) {
-                final int colIdx = i;
-                TableColumn<ObservableList<String>, String> column = new TableColumn<>(rsmd.getColumnName(i + 1));
-                column.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colIdx)));
-                results.getColumns().add(column);
-            }
-
-            // Add data to table
-            ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
-            while (rs.next()) {
-                ObservableList<String> row = FXCollections.observableArrayList();
-                for (int i = 1; i <= numCols; i++) {
-                    row.add(rs.getString(i));
-                }
-                data.add(row);
-            }
-            results.setItems(data);
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-//edit method with editable row and delete button on each row
-    public void edit() {
-
-        String searchStr = searchField.getText();
-
-        try {
-
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM artikel WHERE artikelNr LIKE ? OR titel LIKE ? OR artist LIKE ? OR utgava LIKE ? OR artikelGenre LIKE ? OR artikelKategori LIKE ? OR isbn LIKE ?");
-            stmt.setString(1, "%" + searchStr + "%");
-            stmt.setString(2, "%" + searchStr + "%");
-            stmt.setString(3, "%" + searchStr + "%");
-            stmt.setString(4, "%" + searchStr + "%");
-            stmt.setString(5, "%" + searchStr + "%");
-            stmt.setString(6, "%" + searchStr + "%");
-            stmt.setString(7, "%" + searchStr + "%");
-            ResultSet rs = stmt.executeQuery();
-
-            // Create table columns based on metadata of result set
-            results.getColumns().clear(); // Remove existing columns
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int numCols = rsmd.getColumnCount();
-            for (int i = 0; i < numCols; i++) {
-                final int colIdx = i;
-
-                TableColumn<ObservableList<String>, String> column = new TableColumn<>(rsmd.getColumnName(i + 1));
-                column.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colIdx)));
-
-                if (i != 0 && i != numCols - 1) { // Make all columns editable except the first and last
-                    column.setCellFactory(TextFieldTableCell.forTableColumn());
-                    column.setOnEditCommit(event -> {
-
-                        // Update the value in the table
-                        TablePosition<ObservableList<String>, String> pos = event.getTablePosition();
-                        ObservableList<String> row = pos.getTableView().getItems().get(pos.getRow());
-                        row.set(colIdx, event.getNewValue());
-
-                        // Update the value in the database
-                        try {
-                            PreparedStatement updateStmt = conn.prepareStatement("UPDATE artikel SET " + rsmd.getColumnName(colIdx + 1) + " = ? WHERE artikelNr = ?");
-                            updateStmt.setString(1, event.getNewValue());
-                            updateStmt.setInt(2, Integer.parseInt(row.get(0)));
-                            updateStmt.executeUpdate();
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                } else if (i == numCols - 1) { // Add delete button to last column
-                    TableColumn<ObservableList<String>, Void> deleteColumn = new TableColumn<>("Delete");
-                    deleteColumn.setCellFactory(param -> new TableCell<>() {
-                        private final Button deleteButton = new Button("Delete");
-
-                        @Override
-                        protected void updateItem(Void item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (empty) {
-                                setGraphic(null);
-                            } else {
-                                setGraphic(deleteButton);
-                            }
-                            deleteButton.setOnAction(event -> {
-                                // Get the row data and remove it from the table
-                                ObservableList<String> rowData = getTableView().getItems().get(getIndex());
-                                results.getItems().remove(rowData);
-
-                                // Delete the row from the database
-                                try {
-                                    PreparedStatement deleteStmt = conn.prepareStatement("DELETE FROM artikel WHERE artikelNr = ?");
-                                    deleteStmt.setInt(1, Integer.parseInt(rowData.get(0)));
-                                    deleteStmt.executeUpdate();
-                                } catch (SQLException e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                        }
-                    });
-                    results.getColumns().add(deleteColumn);
-                }
-                results.getColumns().add(column);
-            }
-
-            // Add data to table
-            ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
-            while (rs.next()) {
-                ObservableList<String> row = FXCollections.observableArrayList();
-                for (int i = 1; i <= numCols; i++) {
-                    row.add(rs.getString(i));
-                }
-                data.add(row);
-            }
-            results.setItems(data);
-
-            // Enable editing
-            results.setEditable(false);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-//edit method with editable rows
-    public void edit() {
-
-        String searchStr = searchField.getText();
-
-        try {
-
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM artikel WHERE artikelNr LIKE ? OR titel LIKE ? OR artist LIKE ? OR utgava LIKE ? OR artikelGenre LIKE ? OR artikelKategori LIKE ? OR isbn LIKE ?");
-            stmt.setString(1, "%" + searchStr + "%");
-            stmt.setString(2, "%" + searchStr + "%");
-            stmt.setString(3, "%" + searchStr + "%");
-            stmt.setString(4, "%" + searchStr + "%");
-            stmt.setString(5, "%" + searchStr + "%");
-            stmt.setString(6, "%" + searchStr + "%");
-            stmt.setString(7, "%" + searchStr + "%");
-            ResultSet rs = stmt.executeQuery();
-
-            // Create table columns based on metadata of result set
-            results.getColumns().clear(); // Remove existing columns
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int numCols = rsmd.getColumnCount();
-            for (int i = 0; i < numCols; i++) {
-                final int colIdx = i;
-
-                TableColumn<ObservableList<String>, String> column = new TableColumn<>(rsmd.getColumnName(i + 1));
-                column.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().get(colIdx)));
-
-                if (i != 0 && i != numCols - 1) { // Make all columns editable except the first and last
-                    column.setCellFactory(TextFieldTableCell.forTableColumn());
-                    column.setOnEditCommit(event -> {
-
-                        // Update the value in the table
-                        TablePosition<ObservableList<String>, String> pos = event.getTablePosition();
-                        ObservableList<String> row = pos.getTableView().getItems().get(pos.getRow());
-                        row.set(colIdx, event.getNewValue());
-
-                        // Update the value in the database
-                        try {
-                            PreparedStatement updateStmt = conn.prepareStatement("UPDATE artikel SET " + rsmd.getColumnName(colIdx + 1) + " = ? WHERE artikelNr = ?");
-                            updateStmt.setString(1, event.getNewValue());
-                            updateStmt.setInt(2, Integer.parseInt(row.get(0)));
-                            updateStmt.executeUpdate();
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-                results.getColumns().add(column);
-            }
-
-            // Add data to table
-            ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
-            while (rs.next()) {
-                ObservableList<String> row = FXCollections.observableArrayList();
-                for (int i = 1; i <= numCols; i++) {
-                    row.add(rs.getString(i));
-                }
-                data.add(row);
-            }
-            results.setItems(data);
-
-            // Enable editing
-            results.setEditable(true);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 */
+
+
+
+
 
 
 

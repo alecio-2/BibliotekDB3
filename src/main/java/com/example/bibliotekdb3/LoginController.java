@@ -19,6 +19,8 @@ public class LoginController extends BaseController {
 
     private static String loggedInUser = null;
 
+    private static String fNamn ;
+
     @FXML
     private TextField usernameInput;
 
@@ -32,7 +34,16 @@ public class LoginController extends BaseController {
     public void login() throws IOException, SQLException {
         String username = usernameInput.getText();
         String password = passwordInput.getText();
-        String fName = null;
+        String fNamn = null;
+//new
+        // Retrieve the AccountController instance
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("account.fxml"));
+        Parent accountRoot = loader.load();
+        AccountController accountController = loader.getController();
+
+        // Pass the fNamn value to AccountController
+        accountController.setfNamn(fNamn);
+   //new end
 
         // Create the SQL statement to retrieve user info
         String sql = "SELECT * FROM anvandare WHERE anvandareNr = ? AND losenord = ?";
@@ -51,13 +62,20 @@ public class LoginController extends BaseController {
 
             // Check if the query returned any rows
             if (rs.next()) {
-                // User is authenticated
-                fName = rs.getString("fNamn");
 
-                loggedInUser = username; //Mazkin
+
+                // User is authenticated
+                fNamn = rs.getString("fNamn");
+                loggedInUser = username;
                 UserSession.setCurrentUser(loggedInUser);
 
-              //  System.out.println("Welcome " + fName);
+
+
+
+                System.out.println("loggedInUser: " + getLoggedInUser());
+                System.out.println("fNamn " + fNamn);
+
+
                 App.setRoot("account.fxml");
                 System.out.println("Login successful");
             } else {
@@ -75,16 +93,20 @@ public class LoginController extends BaseController {
             }
         }
     }
-
+    public static String getfNamn() {
+        return fNamn;
+    }
     public static String getLoggedInUser() {
         try {
-        return loggedInUser;
+
+            return loggedInUser;
+
         } catch (Exception e) {
             System.out.println("Error in getLoggedInUser() from LoginController class: " + e.getMessage());
             return null;
         }
-    }
 
+    }
 
 
 }

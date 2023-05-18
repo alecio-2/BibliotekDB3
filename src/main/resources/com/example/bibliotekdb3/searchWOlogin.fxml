@@ -14,7 +14,7 @@
         <TextField id="searchField" fx:id="searchField" layoutX="91.0" layoutY="35.0" onAction="#searchDB" prefHeight="26.0" prefWidth="820.0" promptText="Type in to search" />
         <Button fx:id="searchButton" layoutX="921.0" layoutY="35.0" mnemonicParsing="false" onAction="#searchDB" text="Search" />
         <Label layoutX="39.0" layoutY="39.0" text="Search" />
-        <TableView fx:id="searchResults" layoutY="81.0" prefHeight="669.0" prefWidth="1000.0">
+        <TableView fx:id="results" layoutY="81.0" prefHeight="669.0" prefWidth="1000.0">
             <columns>
 
             </columns>
