@@ -2,9 +2,6 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -13,26 +10,6 @@
    <children>
       <AnchorPane prefHeight="750.0" prefWidth="1000.0">
          <children>
-            <MenuBar layoutY="1.0">
-               <menus>
-                  <Menu mnemonicParsing="false" text="File">
-                     <items>
-                        <MenuItem fx:id="backHome" mnemonicParsing="false" onAction="#backHome" text="Back to HomePage" />
-                        <MenuItem fx:id="close" mnemonicParsing="false" onAction="#close" text="Close" />
-                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Edit">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Help">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                     </items>
-                  </Menu>
-               </menus>
-            </MenuBar>
             <TableView fx:id="results" layoutX="14.0" layoutY="153.0" prefHeight="588.0" prefWidth="967.0" />
             <TextField id="searchField" fx:id="searchField" layoutX="98.0" layoutY="101.0" onAction="#searchDB" prefHeight="26.0" prefWidth="711.0" promptText="Type in to search" />
             <Button fx:id="searchButton" layoutX="825.0" layoutY="102.0" mnemonicParsing="false" onAction="#searchDB" text="Search" />
@@ -44,6 +21,8 @@
             <Button fx:id="returnArticle" layoutX="354.0" layoutY="67.0" mnemonicParsing="false" onAction="#returnArticle" text="Return article" />
             <Button fx:id="lateButton" layoutX="510.0" layoutY="67.0" mnemonicParsing="false" onAction="#late" text="Show late clients" />
             <TextField fx:id="userMessage" alignment="CENTER" editable="false" layoutX="329.0" layoutY="13.0" prefHeight="26.0" prefWidth="342.0" promptText="Vällkomen Alexandru. Du är inloggat som forskare." />
+            <Button fx:id="backHome" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#backHome" text="Logout" />
+            <Button fx:id="close" layoutX="940.0" layoutY="20.0" mnemonicParsing="false" onAction="#close" text="Close" />
          </children>
       </AnchorPane>
       <Button fx:id="showBorrows" layoutX="97.0" layoutY="66.0" mnemonicParsing="false" onAction="#showBorrows" text="Show borrows" />

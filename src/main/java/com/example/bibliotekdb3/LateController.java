@@ -17,15 +17,6 @@ public class LateController extends BaseController {
     private Connection conn = DatabaseConnector.getConnection();
 
     @FXML
-    private MenuItem back;
-
-    @FXML
-    private MenuItem backAccount;
-
-    @FXML
-    private MenuItem close;
-
-    @FXML
     private Button populateButton;
 
     @FXML

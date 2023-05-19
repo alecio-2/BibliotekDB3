@@ -43,12 +43,6 @@ public class AccountController extends BaseController {
     private Button deleteButton;
 
     @FXML
-    private MenuItem back;
-
-    @FXML
-    private MenuItem close;
-
-    @FXML
     private TableView results;
 
     @FXML

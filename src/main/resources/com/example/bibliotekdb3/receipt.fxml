@@ -13,7 +13,7 @@
     <children>
         <Label />
         <Button fx:id="OkButton" layoutX="181.0" layoutY="386.0" mnemonicParsing="false" onAction="#handleOkButton" text="OK" />
-      <Label layoutX="164.0" layoutY="17.0" text="Kvitto " />
+      <Label layoutX="164.0" layoutY="17.0" text="Receipt" />
       <GridPane layoutY="55.0" prefHeight="329.0" prefWidth="459.0">
         <columnConstraints>
           <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="156.0" />
@@ -34,52 +34,52 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-              <Label text="Lånade arikel nummer:" GridPane.rowIndex="1">
+              <Label text="Object no" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-              <Label text="SAB:" GridPane.rowIndex="2">
+              <Label text="SAB" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-              <Label text="Titel:" GridPane.rowIndex="3">
+              <Label text="Title" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-              <Label text="Artist:" GridPane.rowIndex="4">
+              <Label text="Artist" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-              <Label text="Utgåva:" GridPane.rowIndex="5">
+              <Label text="Edition" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-              <Label text="Artikel Genre:" GridPane.rowIndex="6">
+              <Label text="Article Genre" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-              <Label text="Artikel Kategori:" GridPane.rowIndex="7">
+              <Label text="Article Category" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-              <Label text="ISBN:" GridPane.rowIndex="8">
+              <Label text="ISBN" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-              <Label text="Lånedatum:" GridPane.rowIndex="9">
+              <Label text="Loan date" GridPane.rowIndex="9">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </Label>
-              <Label text="Förfallodatum:" GridPane.rowIndex="10">
+              <Label text="Due date" GridPane.rowIndex="10">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
@@ -94,7 +94,7 @@
               <TextField fx:id="ISBN" editable="false" maxWidth="-Infinity" prefHeight="25.0" prefWidth="120.0" promptText="978-3-16-148410-9" GridPane.columnIndex="1" GridPane.rowIndex="8" />
               <TextField fx:id="LaneDatum" editable="false" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="2099-12-31" GridPane.columnIndex="1" GridPane.rowIndex="9" />
               <TextField fx:id="ForfalloDatum" editable="false" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="2100-02-15" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-            <Label text="Användare Nummer:">
+            <Label text="User no">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>

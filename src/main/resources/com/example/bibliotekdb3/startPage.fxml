@@ -2,40 +2,19 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
 <AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.StartPageController">
     <children>
-        <Pane layoutY="-1.0" prefHeight="750.0" prefWidth="1000.0">
+        <Pane layoutX="-6.0" prefHeight="750.0" prefWidth="1000.0">
             <children>
-                <Button id="loginButtonSP" fx:id="loginButtonSP" layoutX="536.0" layoutY="391.0" mnemonicParsing="false" onAction="#loginSP" text="Login" />
+                <Button id="loginButtonSP" fx:id="loginButtonSP" layoutX="508.0" layoutY="363.0" mnemonicParsing="false" onAction="#loginSP" text="Login" />
 
-                <Button fx:id="searchButtonSP" layoutX="533.0" layoutY="335.0" mnemonicParsing="false" onAction="#searchSP" text="Search" />
-                <Label layoutX="386.0" layoutY="339.0" text="Search withoud login" />
-                <Label layoutX="295.0" layoutY="395.0" text="Login to search and be able to reserve" />
-            <MenuBar layoutY="2.0">
-               <menus>
-                  <Menu mnemonicParsing="false" text="File">
-                     <items>
-                        <MenuItem fx:id="close" mnemonicParsing="false" onAction="#close" text="Close" />
-                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Edit">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Help">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                     </items>
-                  </Menu>
-               </menus>
-            </MenuBar>
+                <Button fx:id="searchButtonSP" layoutX="505.0" layoutY="308.0" mnemonicParsing="false" onAction="#searchSP" text="Search" />
+                <Label layoutX="381.0" layoutY="312.0" text="Search as a guest" />
+                <Label layoutX="296.0" layoutY="368.0" text="Login to your account and search" />
+            <Button fx:id="close" layoutX="940.0" layoutY="20.0" mnemonicParsing="false" onAction="#close" text="Close" />
             </children>
         </Pane>
 

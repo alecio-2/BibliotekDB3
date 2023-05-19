@@ -2,9 +2,6 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -13,69 +10,47 @@
 
 <AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bibliotekdb3.EditController">
    <children>
-      <AnchorPane prefHeight="750.0" prefWidth="1000.0">
+      <Label layoutX="390.0" layoutY="146.0" text="Edit the object from the database" />
+      <Button fx:id="saveButton" layoutX="456.0" layoutY="516.0" mnemonicParsing="false" onAction="#save" text="Save" />
+      <GridPane layoutX="384.0" layoutY="204.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <Label layoutX="454.0" layoutY="186.0" text="Edit the article" />
-            <Button fx:id="saveButton" layoutX="481.0" layoutY="539.0" mnemonicParsing="false" onAction="#save" text="Save" />
-            <MenuBar layoutX="-6.0" layoutY="2.0">
-               <menus>
-                  <Menu mnemonicParsing="false" text="File">
-                     <items>
-                        <MenuItem fx:id="backHome" mnemonicParsing="false" onAction="#backHome" text="Back to HomePage" />
-                        <MenuItem fx:id="backAccount" mnemonicParsing="false" onAction="#backAccount" text="Back to My Account" />
-                        <MenuItem fx:id="close" mnemonicParsing="false" onAction="#close" text="Close" />
-                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Edit">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Help">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                     </items>
-                  </Menu>
-               </menus>
-            </MenuBar>
-            <GridPane layoutX="400.0" layoutY="245.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label fx:id="artikelNrLabel" text="artikelNr" />
-                  <Label fx:id="sabLabel" text="sab" GridPane.rowIndex="1" />
-                  <Label fx:id="titelLabel" text="titel" GridPane.rowIndex="2" />
-                  <Label fx:id="artistLabel" text="artist" GridPane.rowIndex="3" />
-                  <Label fx:id="utgavaLabel" text="utgava" GridPane.rowIndex="4" />
-                  <Label fx:id="artikelGenreLabel" text="artikelGenre" GridPane.rowIndex="5" />
-                  <Label fx:id="artikelKategoriLabel" text="artikelKategori" GridPane.rowIndex="6" />
-                  <Label fx:id="isbnLabel" text="isbn" GridPane.rowIndex="7" />
-                  <Label fx:id="statusTypLabel" text="statusTyp" GridPane.rowIndex="8" />
-                  <TextField fx:id="artikelNrField" editable="false" GridPane.columnIndex="1" />
-                  <TextField fx:id="sabField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="titelField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField fx:id="artistField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField fx:id="utgavaField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField fx:id="artikelGenreField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField fx:id="artikelKategoriField" prefHeight="25.0" prefWidth="149.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <TextField fx:id="isbnField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                  <TextField fx:id="statusTypField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-               </children>
-            </GridPane>
+            <Label fx:id="artikelNrLabel" text="artikelNr" />
+            <Label fx:id="sabLabel" text="sab" GridPane.rowIndex="1" />
+            <Label fx:id="titelLabel" text="titel" GridPane.rowIndex="2" />
+            <Label fx:id="artistLabel" text="artist" GridPane.rowIndex="3" />
+            <Label fx:id="utgavaLabel" text="utgava" GridPane.rowIndex="4" />
+            <Label fx:id="artikelGenreLabel" text="artikelGenre" GridPane.rowIndex="5" />
+            <Label fx:id="artikelKategoriLabel" text="artikelKategori" GridPane.rowIndex="6" />
+            <Label fx:id="isbnLabel" text="isbn" GridPane.rowIndex="7" />
+            <Label fx:id="statusTypLabel" text="statusTyp" GridPane.rowIndex="8" />
+            <TextField fx:id="artikelNrField" editable="false" GridPane.columnIndex="1" />
+            <TextField fx:id="sabField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="titelField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="artistField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="utgavaField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="artikelGenreField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="artikelKategoriField" prefHeight="25.0" prefWidth="149.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="isbnField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <TextField fx:id="statusTypField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
          </children>
-      </AnchorPane>
+      </GridPane>
+      <Button fx:id="backHome" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#backHome" text="Logout" />
+      <Button fx:id="backAccount" layoutX="100.0" layoutY="20.0" mnemonicParsing="false" onAction="#backAccount" text="Back to My Account" />
+      <Button fx:id="close" layoutX="940.0" layoutY="20.0" mnemonicParsing="false" onAction="#close" text="Close" />
    </children>
 </AnchorPane>
