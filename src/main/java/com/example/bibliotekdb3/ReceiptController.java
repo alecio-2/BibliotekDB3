@@ -68,6 +68,7 @@ public class ReceiptController {
     }
 
 
+
     public void initialize() {
         try {
             // Clear the receipt data
