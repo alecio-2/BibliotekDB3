@@ -18,8 +18,6 @@ import java.util.ResourceBundle;
 public class EditController extends BaseController {
     private Connection conn = DatabaseConnector.getConnection();
 
-    String currentUser; //
-
     public Button saveButton;
     public TextField sabField;
     public TextField statusTypField;
@@ -32,40 +30,35 @@ public class EditController extends BaseController {
     public Label sabLabel;
     public Label artikelNrLabel;
 
-
     @FXML
     private Label titelLabel;
 
     @FXML
     private TextField artikelNrField;
 
-
     @FXML
     private TextField titelField;
-
 
     @FXML
     private TextField artistField;
 
-
     @FXML
     private TextField utgavaField;
-
 
     @FXML
     private TextField artikelGenreField;
 
-
     @FXML
     private TextField artikelKategoriField;
-
 
     @FXML
     private TextField isbnField;
 
 
     //Method to get the data from the selected row in the table and pass it to the TextFields
-    public void receiveDetails(String artikelNr, String sab, String titel, String artist, String utgava, String artikelGenre, String artikelKategori, String isbn, String statusTyp) {
+    public void receiveDetails(String artikelNr, String sab, String titel,
+                               String artist, String utgava, String artikelGenre,
+                               String artikelKategori, String isbn, String statusTyp) {
 
         try {
             //Pass the information from the table to the TextFields
@@ -82,7 +75,6 @@ public class EditController extends BaseController {
             System.out.println("Error in receiveDetails() from EditController class: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 
     @FXML
@@ -100,10 +92,16 @@ public class EditController extends BaseController {
         String statusTyp = statusTypField.getText();
 
         // Ask the user for confirmation
-        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Save confirmation", "Are you sure you want to save the changes?");
+        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION,
+                "Save confirmation",
+                "Are you sure you want to save the changes?");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // User confirmed, update the row from the table and database
-            String updateQuery = "UPDATE artikel SET sab = ?, titel = ?, artist = ?, utgava = ?, artikelGenre = ?, artikelKategori = ?, isbn = ?, statusTyp = ?  WHERE artikelNr = ?";
+            String updateQuery = "UPDATE artikel " +
+                    "SET sab = ?, titel = ?, artist = ?, " +
+                    "utgava = ?, artikelGenre = ?, artikelKategori = ?, " +
+                    "isbn = ?, statusTyp = ?  " +
+                    "WHERE artikelNr = ?";
 
             //Go back to account page
             App.setRoot("account.fxml");
@@ -111,6 +109,7 @@ public class EditController extends BaseController {
 
             // Execute the update query using database connection
             try {
+                // Create the prepared statement
                 PreparedStatement statement = conn.prepareStatement(updateQuery);
                 statement.setString(1, sab);
                 statement.setString(2, titel);
@@ -127,20 +126,24 @@ public class EditController extends BaseController {
 
                 // Check if the update was successful
                 if (rowsAffected > 0) {
-                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Update successful!", "The changes have been saved.");
+                    // Update was successful, show an alert
+                    BaseController.showAlert(Alert.AlertType.INFORMATION,
+                            "Update successful!",
+                            "The changes have been saved.");
                 } else {
-                    BaseController.showAlert(Alert.AlertType.ERROR, "Update failed!", "The changes could not be saved.");
+                    // Update failed, show an alert
+                    BaseController.showAlert(Alert.AlertType.ERROR,
+                            "Update failed!",
+                            "The changes could not be saved.");
                 }
             } catch (SQLException e) {
-                BaseController.showAlert(Alert.AlertType.ERROR, "Database error!", "An error occurred while trying to update the object: " + e.getMessage());
+                // Show an alert if there was an error
+                BaseController.showAlert(Alert.AlertType.ERROR,
+                        "Database error!",
+                        "An error occurred while trying to update the object: " + e.getMessage());
                 e.printStackTrace();
             }
-
-
         }
-
     }
-
-
 }
 

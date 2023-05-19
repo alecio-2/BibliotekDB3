@@ -31,14 +31,15 @@ public class LoginController extends BaseController {
 
     @FXML
     public void login() throws IOException, SQLException {
+
         String username = usernameInput.getText();
         String password = passwordInput.getText();
-        // String fNamn = null;
-
-
 
         // Create the SQL statement to retrieve user info
-        String sql = "SELECT * FROM anvandare WHERE anvandareNr = ? AND losenord = ?";
+        String sql = "SELECT * " +
+                "FROM anvandare " +
+                "WHERE anvandareNr = ? " +
+                "AND losenord = ?";
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -55,7 +56,6 @@ public class LoginController extends BaseController {
             // Check if the query returned any rows
             if (rs.next()) {
 
-
                 // User is authenticated
                 fNamn = rs.getString("fNamn");
                 loggedInUser = username;
@@ -65,13 +65,15 @@ public class LoginController extends BaseController {
                 System.out.println("loggedInUser: " + getLoggedInUser());
                 System.out.println("fNamn " + fNamn);
 
-
+                // Load the account view
                 App.setRoot("account.fxml");
                 System.out.println("Login successful");
             } else {
                 // User is not authenticated
                 System.out.println("Error: Invalid username or password");
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid username or password");
+                BaseController.showAlert(Alert.AlertType.ERROR,
+                        "Error",
+                        "Invalid username or password");
             }
         } finally {
             // Close the result set and prepared statement
@@ -84,7 +86,6 @@ public class LoginController extends BaseController {
         }
     }
 
-
     public static String getfNamn() {
         return fNamn;
     }
@@ -92,6 +93,5 @@ public class LoginController extends BaseController {
     public static String getLoggedInUser() {
         return loggedInUser;
     }
-
 
 }

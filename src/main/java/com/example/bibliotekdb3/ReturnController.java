@@ -14,9 +14,8 @@ import java.util.jar.JarEntry;
 
 public class ReturnController extends BaseController {
 
+    // Get the connection to the database
     private Connection conn = DatabaseConnector.getConnection();
-
-    String currentUser;
 
     @FXML
     private TextField inputField;
@@ -25,28 +24,38 @@ public class ReturnController extends BaseController {
     private Button returnButton;
 
     public void returnArticle() throws SQLException {
+        // Get the input from the user
         String input = inputField.getText();
 
         // Ask the user for confirmation
-        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to return the object with article no: " + input + "?");
+        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION,
+                "Confirmation",
+                "Are you sure you want to return the object with article no: " + input + "?");
 
+        // If the user confirmed, add the new row to the table and database
         if (result.isPresent() && result.get() == ButtonType.OK) {
 
             // User confirmed, add the new row to the table and database
             String currentUser = UserSession.getCurrentUser();
 
+            // Print the current user to the console to test the function of getting the right user
             System.out.println("Return made by user no: " + currentUser);
             System.out.println("Returned the object no: " + inputField.getText());
 
             //String input = inputField.getText();
-            String sql1 = "SELECT lan.lanNr FROM lan JOIN lanartikel ON lan.lanNr = lanartikel.lanNr WHERE lan.anvandareNr = ? and lanartikel.artikelNr = ?;";
+            String sql1 = "SELECT lan.lanNr " +
+                    "FROM lan " +
+                    "JOIN lanartikel ON lan.lanNr = lanartikel.lanNr " +
+                    "WHERE lan.anvandareNr = ? and lanartikel.artikelNr = ?;";
 
+            // Create a prepared statement
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
 
             try {
-
+                // Set the parameters
                 stmt1.setString(1, currentUser);
                 stmt1.setString(2, input);
+                // Execute the query
                 ResultSet rs = stmt1.executeQuery();
 
                 //write the result of the query to a variable currentLanNr
@@ -58,8 +67,9 @@ public class ReturnController extends BaseController {
                     // System.out.println("Current Lan Nr: " + currentLanNr);
 
                     // Insert the new row into the database
-                    String sql = "INSERT INTO inlamningsdatum (lanNr, artikelNr, inlamningsDatum) VALUES (?, ?, ?)";
-
+                    String sql = "INSERT INTO inlamningsdatum (lanNr, artikelNr, inlamningsDatum) " +
+                            "VALUES (?, ?, ?)";
+                    // Create a prepared statement
                     PreparedStatement stmt = conn.prepareStatement(sql);
                     stmt.setString(1, currentLanNr);
                     stmt.setString(2, input);
@@ -68,17 +78,21 @@ public class ReturnController extends BaseController {
 
                     // Return to the account page
                     App.setRoot("account.fxml");
-
-                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Information", "Object returned successfully.");
+                    // Show a confirmation message
+                    BaseController.showAlert(Alert.AlertType.INFORMATION,
+                            "Information",
+                            "Object returned successfully.");
                 } else {
-                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "No active loan no found for the current user on that object.");
+                    // Show an error message
+                    BaseController.showAlert(Alert.AlertType.INFORMATION,
+                            "Error",
+                            "No active loan no found for the current user on that object.");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                // Print in the console an error message
                 System.out.println("Error in returnArticle() in ReturnController class : " + e.getMessage());
             }
         }
     }
-
-
 }

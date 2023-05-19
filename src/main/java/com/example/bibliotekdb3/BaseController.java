@@ -10,8 +10,9 @@ import java.sql.*;
 import java.util.Optional;
 
 
-public   class BaseController {
+public class BaseController {
 
+    // Navigates to the account view
     public void backAccount() throws IOException {
         try {
             App.setRoot("account.fxml");
@@ -21,6 +22,7 @@ public   class BaseController {
         }
     }
 
+    // Navigates to the home/start page view
     public void backHome() throws IOException {
         try {
             App.setRoot("startPage.fxml");
@@ -30,6 +32,7 @@ public   class BaseController {
         }
     }
 
+    // Closes the application
     public void close() {
         try {
             System.exit(0);
@@ -39,7 +42,7 @@ public   class BaseController {
         }
     }
 
-
+    // Displays an alert dialog with the specified alert type, title, and message
     public static void showAlert(Alert.AlertType alertType, String title, String message) {
         try {
             Alert alert = new Alert(alertType);
@@ -53,7 +56,7 @@ public   class BaseController {
         }
     }
 
-
+    // Displays a confirmation dialog with the specified alert type, title, and message
     public static Optional<ButtonType> showConfirmation(Alert.AlertType alertType, String title, String message) {
         try {
             Alert alert = new Alert(alertType);
@@ -68,7 +71,6 @@ public   class BaseController {
             return Optional.empty();
         }
     }
-
 
 }
 

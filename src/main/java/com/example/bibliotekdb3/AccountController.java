@@ -24,7 +24,6 @@ public class AccountController extends BaseController {
 
     private Connection conn = DatabaseConnector.getConnection();
 
-
     @FXML
     private TextField userMessage;
 
@@ -65,8 +64,21 @@ public class AccountController extends BaseController {
 
             String anvandareNr = currentUser;
             try {
-                PreparedStatement stmt = conn.prepareStatement("SELECT anvandare.fNamn, lan.lanNr, artikel.artikelNr, lanartikel.laneDatum, lanartikel.forfalloDatum, artikel.titel, artikel.artist, artikel.isbn FROM anvandare JOIN lan  ON anvandare.anvandareNr = lan.anvandareNr JOIN lanartikel ON lan.lanNr = lanartikel.lanNr JOIN artikel ON lanartikel.artikelNr = artikel.artikelNr WHERE lan.anvandareNr = ? AND lanartikel.lanNr NOT IN (SELECT lanNr FROM inlamningsdatum)");
+                // Prepare the SQL statement to retrieve borrow information
+                PreparedStatement stmt = conn.prepareStatement(
+                        "SELECT anvandare.fNamn, lan.lanNr, artikel.artikelNr, " +
+                                "lanartikel.laneDatum, lanartikel.forfalloDatum, artikel.titel, " +
+                                "artikel.artist, artikel.isbn " +
+                                "FROM anvandare " +
+                                "JOIN lan  ON anvandare.anvandareNr = lan.anvandareNr " +
+                                "JOIN lanartikel ON lan.lanNr = lanartikel.lanNr " +
+                                "JOIN artikel ON lanartikel.artikelNr = artikel.artikelNr " +
+                                "WHERE lan.anvandareNr = ? " +
+                                "AND lanartikel.lanNr NOT IN (SELECT lanNr FROM inlamningsdatum)");
+
                 stmt.setInt(1, Integer.parseInt(anvandareNr));
+
+                // Execute the query
                 ResultSet rs = stmt.executeQuery();
 
                 // Create table columns based on metadata of result set
@@ -95,10 +107,14 @@ public class AccountController extends BaseController {
 
             } catch (SQLException e) {
                 // Handle the exception
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while executing the query.: " + e.getMessage());
+                BaseController.showAlert(Alert.AlertType.ERROR,
+                        "Error",
+                        "An error occurred while executing the query.: " + e.getMessage());
             } catch (NumberFormatException e) {
                 // Handle the exception
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid user no: " + e.getMessage());
+                BaseController.showAlert(Alert.AlertType.ERROR,
+                        "Error",
+                        "Invalid user no: " + e.getMessage());
             }
         }
     }
@@ -113,9 +129,17 @@ public class AccountController extends BaseController {
 
             String anvandareNr = currentUser;
             try {
-                PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, re.reservationNr, ar.artikelNr, re.reservationDatum, ar.titel, ar.artist, ar.isbn FROM reservation re  JOIN anvandare a ON a.anvandareNr = re.anvandareNr JOIN artikel ar ON ar.artikelNr = re.artikelNr WHERE a.anvandareNr = ?");
-                stmt.setInt(1, Integer.parseInt(anvandareNr));
+                // Prepare the SQL statement to retrieve reservation information
+                PreparedStatement stmt = conn.prepareStatement(
+                        "SELECT a.fNamn, re.reservationNr, ar.artikelNr, " +
+                                "re.reservationDatum, ar.titel, ar.artist, ar.isbn " +
+                                "FROM reservation re  " +
+                                "JOIN anvandare a ON a.anvandareNr = re.anvandareNr " +
+                                "JOIN artikel ar ON ar.artikelNr = re.artikelNr " +
+                                "WHERE a.anvandareNr = ?");
 
+                stmt.setInt(1, Integer.parseInt(anvandareNr));
+                // Execute the query
                 ResultSet rs = stmt.executeQuery();
 
                 // Create table columns based on metadata of result set
@@ -144,23 +168,33 @@ public class AccountController extends BaseController {
 
             } catch (SQLException e) {
                 // Handle the exception
-                e.printStackTrace();
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while executing the query.: " + e.getMessage());
+                BaseController.showAlert(Alert.AlertType.ERROR,
+                        "Error",
+                        "An error occurred while executing the query.: " + e.getMessage());
             } catch (NumberFormatException e) {
                 // Handle the exception
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid user no: " + e.getMessage());
+                BaseController.showAlert(Alert.AlertType.ERROR,
+                        "Error",
+                        "Invalid user no: " + e.getMessage());
             }
         }
     }
 
     @FXML
     public void initialize() {
+        // Get the current user
         String currentUser = UserSession.getCurrentUser();
 
+        // Check if the user is logged in
         if (currentUser != null) {
 
             try {
-                PreparedStatement stmt = conn.prepareStatement("SELECT anvandareTyp FROM anvandare WHERE anvandareNr = ?");
+                // Prepare the SQL statement to retrieve the user's type
+                PreparedStatement stmt = conn.prepareStatement(
+                        "SELECT anvandareTyp " +
+                                "FROM anvandare " +
+                                "WHERE anvandareNr = ?");
+
                 stmt.setInt(1, Integer.parseInt(currentUser));
                 ResultSet rs = stmt.executeQuery();
 
@@ -173,9 +207,15 @@ public class AccountController extends BaseController {
                             anvandareMessage = new StudentAnvandare();
                             break;
                         case "Anstalld":
-                            PreparedStatement stmt1 = conn.prepareStatement("SELECT anstalldTyp FROM anstalld WHERE anvandareNr = ?");
+                            // Prepare the SQL statement to retrieve the employee's type
+                            PreparedStatement stmt1 = conn.prepareStatement(
+                                    "SELECT anstalldTyp " +
+                                            "FROM anstalld " +
+                                            "WHERE anvandareNr = ?");
+
                             stmt1.setInt(1, Integer.parseInt(currentUser));
                             ResultSet rs1 = stmt1.executeQuery();
+                            // Check if the employee is a librarian
                             if (rs1.next() && rs1.getString("anstalldTyp").equals("Bibliotekarie")) {
                                 anvandareMessage = new BibliotekarieAnvandare();
                             } else {
@@ -192,9 +232,11 @@ public class AccountController extends BaseController {
                             System.out.println("Invalid user type");
                             break;
                     }
-
+                    // Check if the user type is valid
                     if (anvandareMessage != null) {
+                        // Print a message specific to the user's type, passing the user's first name as an argument
                         anvandareMessage.printMessage(LoginController.getfNamn());
+                        // Set the user's message to be displayed
                         setUserMessage(anvandareMessage.getMessage());
                     }
                 }
@@ -205,10 +247,18 @@ public class AccountController extends BaseController {
             }
         }
 
+        // Check if the user is a librarian
         if (currentUser != null) {
             try {
-                PreparedStatement stmt = conn.prepareStatement("SELECT anstalldTyp FROM anstalld WHERE anvandareNr = ?");
+
+                // Prepare the SQL statement to retrieve the employee's type
+                PreparedStatement stmt = conn.prepareStatement(
+                        "SELECT anstalldTyp " +
+                                "FROM anstalld " +
+                                "WHERE anvandareNr = ?");
+
                 stmt.setInt(1, Integer.parseInt(currentUser));
+                // Execute the query
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next() && rs.getString("anstalldTyp").equals("Bibliotekarie")) {
@@ -251,7 +301,12 @@ public class AccountController extends BaseController {
 
     @FXML
     public void add() throws IOException {
-        App.setRoot("add.fxml");
+        try {
+            App.setRoot("add.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -262,7 +317,9 @@ public class AccountController extends BaseController {
             if (selectedRow == null) {
 
                 // Show an alert if no row is selected
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Please select an object to edit.");
+                BaseController.showAlert(Alert.AlertType.ERROR,
+                        "Error",
+                        "Please select an object to edit.");
                 return;
 
             } else {
@@ -284,7 +341,10 @@ public class AccountController extends BaseController {
 
                 // Pass the data to the controller
                 EditController editController = loader.getController();
-                editController.receiveDetails(artikelNr, sab, titel, artist, utgava, artikelGenre, artikelKategori, isbn, statusTyp);
+                editController.receiveDetails(
+                        artikelNr, sab, titel,
+                        artist, utgava, artikelGenre,
+                        artikelKategori, isbn, statusTyp);
 
                 // Replace the content of the current window with edit.fxml content
                 Scene scene = results.getScene();
@@ -302,7 +362,9 @@ public class AccountController extends BaseController {
         ObservableList<String> selectedRow = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
         if (selectedRow == null) {
             // Show an alert if no row is selected
-            BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Please select an object to delete.");
+            BaseController.showAlert(Alert.AlertType.ERROR,
+                    "Error",
+                    "Please select an object to delete.");
             return;
         }
 
@@ -310,18 +372,33 @@ public class AccountController extends BaseController {
         String title = selectedRow.get(2); // assuming the title is in the third column
 
         // Ask the user for confirmation
-        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Delete Object", "Are you sure you want to delete " + title + "?");
+        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION,
+                "Delete Object",
+                "Are you sure you want to delete " + title + "?");
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // User confirmed, delete the row from the table and database
+
             try {
-                PreparedStatement stmt = conn.prepareStatement("DELETE FROM artikel WHERE artikelNr = ?");
-                stmt.setInt(1, Integer.parseInt(selectedRow.get(0))); // assuming the article number is in the first column
+                // Delete the row from the database
+                PreparedStatement stmt = conn.prepareStatement(
+                        "DELETE FROM artikel " +
+                                "WHERE artikelNr = ?");
+
+                // Assuming the article number is in the first column
+                stmt.setInt(1, Integer.parseInt(selectedRow.get(0)));
                 stmt.executeUpdate();
                 results.getItems().remove(selectedRow);
-                BaseController.showAlert(Alert.AlertType.INFORMATION, "Success", "The object " + title + " was deleted successfully.");
+
+                // Show a success message
+                BaseController.showAlert(Alert.AlertType.INFORMATION,
+                        "Success",
+                        "The object " + title + " was deleted successfully.");
             } catch (SQLException e) {
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while deleting the object.");
+                // Show an error message
+                BaseController.showAlert(Alert.AlertType.ERROR,
+                        "Error",
+                        "An error occurred while deleting the object.");
                 e.printStackTrace();
             }
         }
@@ -332,8 +409,18 @@ public class AccountController extends BaseController {
 
         String searchStr = searchField.getText();
         try {
+            // Prepare the SQL statement
+            PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT * " +
+                            "FROM artikel " +
+                            "WHERE artikelNr LIKE ? " +
+                            "OR titel LIKE ? " +
+                            "OR artist LIKE ? " +
+                            "OR utgava LIKE ? " +
+                            "OR artikelGenre LIKE ? " +
+                            "OR artikelKategori LIKE ? " +
+                            "OR isbn LIKE ?");
 
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM artikel WHERE artikelNr LIKE ? OR titel LIKE ? OR artist LIKE ? OR utgava LIKE ? OR artikelGenre LIKE ? OR artikelKategori LIKE ? OR isbn LIKE ?");
             stmt.setString(1, "%" + searchStr + "%");
             stmt.setString(2, "%" + searchStr + "%");
             stmt.setString(3, "%" + searchStr + "%");
@@ -341,6 +428,7 @@ public class AccountController extends BaseController {
             stmt.setString(5, "%" + searchStr + "%");
             stmt.setString(6, "%" + searchStr + "%");
             stmt.setString(7, "%" + searchStr + "%");
+            // Execute the query
             ResultSet rs = stmt.executeQuery();
 
             // Create table columns based on metadata of result set
@@ -372,45 +460,70 @@ public class AccountController extends BaseController {
     }
 
     public void borrow() {
+        // Get the current user
         String currentUser = UserSession.getCurrentUser();
-        System.out.println("Current user: " + currentUser);
+
+        //System.out.println("Current user: " + currentUser);
+
+        // Get the selected item
         ObservableList<String> selectedItem = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
 
+        // Check if an item is selected
         if (selectedItem == null) {
-            BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "Please select an item to borrow.");
+            BaseController.showAlert(Alert.AlertType.INFORMATION,
+                    "Error",
+                    "Please select an item to borrow.");
             return;
         }
 
         String artikelNr = selectedItem.get(0);
+
+        // Check if the item is available
         if (currentUser == null) {
-            BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "Please log in to borrow an item.");
+            BaseController.showAlert(Alert.AlertType.INFORMATION,
+                    "Error",
+                    "Please log in to borrow an item.");
             return;
         }
 
         String anvandareNr = currentUser;
+
         try {
             // Insert into 'lan' table
-            PreparedStatement insertLanStmt = conn.prepareStatement("INSERT INTO lan (anvandareNr) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement insertLanStmt = conn.prepareStatement(
+                    "INSERT INTO lan (anvandareNr) " +
+                            "VALUES (?)",
+                    Statement.RETURN_GENERATED_KEYS);
 
             insertLanStmt.setString(1, anvandareNr);
+            // Execute the query
             insertLanStmt.executeUpdate();
 
+            // Get the generated lanNr
             ResultSet rs = insertLanStmt.getGeneratedKeys();
             rs.next();
             int lanNr = rs.getInt(1);
 
             // Insert into 'lanartikel' table
-            PreparedStatement insertLanArtikelStmt = conn.prepareStatement("INSERT INTO lanartikel (lanNr, artikelNr) VALUES (?, ?)");
+            PreparedStatement insertLanArtikelStmt = conn.prepareStatement(
+                    "INSERT INTO lanartikel (lanNr, artikelNr) " +
+                            "VALUES (?, ?)");
 
             insertLanArtikelStmt.setInt(1, lanNr);
             insertLanArtikelStmt.setString(2, artikelNr);
+            // Execute the query
             insertLanArtikelStmt.executeUpdate();
 
             // Query to retrieve inlamningsDatum, laneDatum, and forfalloDatum
-            PreparedStatement query = conn.prepareStatement("SELECT lanartikel.laneDatum, lanartikel.forfalloDatum FROM bibliotek.lanartikel WHERE lanartikel.lanNr = ? AND lanartikel.artikelNr = ?");
+            PreparedStatement query = conn.prepareStatement(
+                    "SELECT lanartikel.laneDatum, lanartikel.forfalloDatum " +
+                            "FROM bibliotek.lanartikel " +
+                            "WHERE lanartikel.lanNr = ? " +
+                            "AND lanartikel.artikelNr = ?");
 
             query.setInt(1, lanNr);
             query.setString(2, artikelNr);
+            // Execute the query
             ResultSet resultSet = query.executeQuery();
 
             // Move the cursor to the first row
@@ -420,8 +533,11 @@ public class AccountController extends BaseController {
                 String forfalloDatum = resultSet.getString("forfalloDatum");
 
                 // Show the confirmation dialog
-                Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to borrow this article?");
+                Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION,
+                        "Confirmation",
+                        "Are you sure you want to borrow this article?");
 
+                // Check if the user confirmed
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     // Show the receipt with the retrieved data
                     String sab = selectedItem.get(1);
@@ -433,21 +549,26 @@ public class AccountController extends BaseController {
                     String isbn = selectedItem.get(7);
                     String statusTyp = selectedItem.get(8);
 
+                    // Load the receipt view
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("receipt.fxml"));
                     Parent root = loader.load();
 
                     // Obtain the correct controller
                     ReceiptController receiptController = loader.getController();
-                    receiptController.setReceiptData(anvandareNr, artikelGenre, artikelKategori, artist, isbn, utgava, artikelNr, sab, titel, laneDatum, forfalloDatum);
+                    receiptController.setReceiptData(anvandareNr, artikelGenre, artikelKategori,
+                            artist, isbn, utgava, artikelNr,
+                            sab, titel, laneDatum, forfalloDatum);
 
+                    // Show the stage in a new window
                     Stage receiptStage = new Stage();
                     receiptStage.setTitle("Receipt");
                     receiptStage.setScene(new Scene(root));
-                    //receiptStage.show();
                     receiptStage.showAndWait();
                 }
             } else {
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Borrowing this item is not allowed.");
+                BaseController.showAlert(Alert.AlertType.ERROR,
+                        "Error",
+                        "Borrowing this item is not allowed.");
             }
         } catch (SQLException e) {
             BaseController.showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
@@ -456,12 +577,10 @@ public class AccountController extends BaseController {
         }
     }
 
-
+    // Method to show the user message
     public void setUserMessage(String message) {
         userMessage.setText(message);
     }
-
-
 }
 
 

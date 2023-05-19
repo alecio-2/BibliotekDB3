@@ -19,6 +19,7 @@ public class DatabaseConnector {
         }
     }
 
+    // Method to get the connection
     public static Connection getConnection() {
         return conn;
     }
