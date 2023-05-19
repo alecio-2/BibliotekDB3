@@ -39,10 +39,7 @@ public class ReturnController extends BaseController {
             //String input = inputField.getText();
             String sql1 = "SELECT lan.lanNr FROM lan JOIN lanartikel ON lan.lanNr = lanartikel.lanNr WHERE lan.anvandareNr = ? and lanartikel.artikelNr = ?;";
 
-            //String sql1 = "JOIN lanartikel ON lan.lanNr = lanartikel.lanNr
-            //WHERE lan.anvandareNr = 2 AND lanartikel.artikelNr = 1
-            //ORDER BY lanartikel.laneDatum DESC
-            //LIMIT 1;";
+
 
             PreparedStatement stmt1 = conn.prepareStatement(sql1);
 

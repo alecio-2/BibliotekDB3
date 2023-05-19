@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class AddController extends BaseController {
+
     private Connection conn = DatabaseConnector.getConnection();
 
     @FXML
@@ -45,8 +46,6 @@ public class AddController extends BaseController {
     @FXML
     private TextField utgava;
 
-
-
     @FXML
     private void add() throws IOException, SQLException {
 
@@ -55,7 +54,7 @@ public class AddController extends BaseController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // User confirmed, add the new row to the table and database
             // Prepare the SQL statement
-            String sql = "INSERT INTO Artikel (sab, titel, artist, utgava, artikelGenre, artikelKategori, isbn) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Artikel (sab, titel, artist, utgava, artikelGenre, artikelKategori, isbn)  VALUES (?, ?, ?, ?, ?, ?, ?)";
             //Go back to account page
             App.setRoot("account.fxml");
 

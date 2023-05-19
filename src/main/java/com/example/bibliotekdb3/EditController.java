@@ -83,33 +83,6 @@ public class EditController extends BaseController {
             e.printStackTrace();
         }
 
-        /*
-       //Print on the console to check if the right information is passed
-        System.out.println("artikelNr: " + artikelNr);
-        System.out.println("sab: " + sab);
-        System.out.println("titel: " + titel);
-        System.out.println("artist: " + artist);
-        System.out.println("utgava: " + utgava);
-        System.out.println("artikelGenre: " + artikelGenre);
-        System.out.println("artikelKategori: " + artikelKategori);
-        System.out.println("isbn: " + isbn);
-        System.out.println("statusTyp: " + statusTyp);
-        */
-
-        /*
-        //Pass the information from the table to the Labels
-        artikelNrLabel.setText(artikelNr);
-        sabLabel.setText(sab);
-        titelLabel.setText(titel);
-        artistLabel.setText(artist);
-        utgavaLabel.setText(utgava);
-        artikelGenreLabel.setText(artikelGenre);
-        artikelKategoriLabel.setText(artikelKategori);
-        isbnLabel.setText(isbn);
-        statusTypLabel.setText(statusTyp);
-        */
-
-
     }
 
     @FXML
@@ -135,11 +108,6 @@ public class EditController extends BaseController {
             //Go back to account page
             App.setRoot("account.fxml");
 
-
-      /*  // Perform the update operation with the retrieved data
-        String updateQuery = "UPDATE artikel SET sab = ?, titel = ?, artist = ?, utgava = ?, " +
-                "artikelGenre = ?, artikelKategori = ?, isbn = ?, statusTyp = ? " +
-                "WHERE artikelNr = ?"; */
 
             // Execute the update query using database connection
             try {
@@ -168,24 +136,10 @@ public class EditController extends BaseController {
                 e.printStackTrace();
             }
 
-        /*
-        //Print on the console to check if the right information is passed
-        System.out.println("After Update it will be:");
-        System.out.println("artikelNr: " + artikelNr);
-        System.out.println("sab: " + sab);
-        System.out.println("titel: " + titel);
-        System.out.println("artist: " + artist);
-        System.out.println("utgava: " + utgava);
-        System.out.println("artikelGenre: " + artikelGenre);
-        System.out.println("artikelKategori: " + artikelKategori);
-        System.out.println("isbn: " + isbn);
-        System.out.println("statusTyp: " + statusTyp);
-        */
 
         }
 
     }
-
 
 
 }

@@ -12,8 +12,10 @@ import javafx.scene.control.TableView;
 
 import java.sql.*;
 
-public class LateController extends BaseController{
+public class LateController extends BaseController {
+
     private Connection conn = DatabaseConnector.getConnection();
+
     @FXML
     private MenuItem back;
 
@@ -27,8 +29,7 @@ public class LateController extends BaseController{
     private Button populateButton;
 
     @FXML
-    private TableView  searchResults;
-
+    private TableView searchResults;
 
     @FXML
     public void populate() {

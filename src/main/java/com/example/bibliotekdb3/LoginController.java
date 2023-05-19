@@ -18,8 +18,7 @@ public class LoginController extends BaseController {
     private Connection conn = DatabaseConnector.getConnection();
 
     private static String loggedInUser = null;
-
-    private static String fNamn ;
+    private static String fNamn = null;
 
     @FXML
     private TextField usernameInput;
@@ -34,16 +33,9 @@ public class LoginController extends BaseController {
     public void login() throws IOException, SQLException {
         String username = usernameInput.getText();
         String password = passwordInput.getText();
-        String fNamn = null;
-//new
-        // Retrieve the AccountController instance
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("account.fxml"));
-        Parent accountRoot = loader.load();
-        AccountController accountController = loader.getController();
+        // String fNamn = null;
 
-        // Pass the fNamn value to AccountController
-        accountController.setfNamn(fNamn);
-   //new end
+
 
         // Create the SQL statement to retrieve user info
         String sql = "SELECT * FROM anvandare WHERE anvandareNr = ? AND losenord = ?";
@@ -70,8 +62,6 @@ public class LoginController extends BaseController {
                 UserSession.setCurrentUser(loggedInUser);
 
 
-
-
                 System.out.println("loggedInUser: " + getLoggedInUser());
                 System.out.println("fNamn " + fNamn);
 
@@ -93,19 +83,14 @@ public class LoginController extends BaseController {
             }
         }
     }
+
+
     public static String getfNamn() {
         return fNamn;
     }
+
     public static String getLoggedInUser() {
-        try {
-
-            return loggedInUser;
-
-        } catch (Exception e) {
-            System.out.println("Error in getLoggedInUser() from LoginController class: " + e.getMessage());
-            return null;
-        }
-
+        return loggedInUser;
     }
 
 

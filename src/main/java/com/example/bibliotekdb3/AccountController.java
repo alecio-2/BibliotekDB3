@@ -20,17 +20,11 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 
-
 public class AccountController extends BaseController {
 
     private Connection conn = DatabaseConnector.getConnection();
 
     String currentUser;
-    private String fNamn;
-
-    public void setfNamn(String fNamn) {
-        this.fNamn = fNamn;
-    }
 
 
     @FXML
@@ -79,8 +73,6 @@ public class AccountController extends BaseController {
 
             String anvandareNr = currentUser;
             try {
-                // PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, " + "ar.titel, ar.artist, ar.isbn " + "FROM anvandare a " + "JOIN lan l ON a.anvandareNr = l.anvandareNr " + "JOIN lanartikel la ON l.lanNr = la.lanNr " + "JOIN artikel ar ON la.artikelNr = ar.artikelNr " + "WHERE a.anvandareNr = ?");
-                // PreparedStatement stmt = conn.prepareStatement("SELECT a.fNamn, l.lanNr, ar.artikelNr, la.laneDatum, la.forfalloDatum, ar.titel, ar.artist, ar.isbn FROM anvandare a JOIN lan l ON a.anvandareNr = l.anvandareNr JOIN lanartikel la ON l.lanNr = la.lanNr JOIN artikel ar ON la.artikelNr = ar.artikelNr WHERE a.anvandareNr = ?");
                 PreparedStatement stmt = conn.prepareStatement("SELECT anvandare.fNamn, lan.lanNr, artikel.artikelNr, lanartikel.laneDatum, lanartikel.forfalloDatum, artikel.titel, artikel.artist, artikel.isbn FROM anvandare JOIN lan  ON anvandare.anvandareNr = lan.anvandareNr JOIN lanartikel ON lan.lanNr = lanartikel.lanNr JOIN artikel ON lanartikel.artikelNr = artikel.artikelNr WHERE lan.anvandareNr = ? AND lanartikel.lanNr NOT IN (SELECT lanNr FROM inlamningsdatum)");
                 stmt.setInt(1, Integer.parseInt(anvandareNr));
                 ResultSet rs = stmt.executeQuery();
@@ -117,7 +109,6 @@ public class AccountController extends BaseController {
                 BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid anvandareNr: " + e.getMessage());
             }
         }
-
     }
 
     @FXML
@@ -168,7 +159,6 @@ public class AccountController extends BaseController {
                 BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid anvandareNr: " + e.getMessage());
             }
         }
-
     }
 
     @FXML
@@ -176,6 +166,7 @@ public class AccountController extends BaseController {
         String currentUser = UserSession.getCurrentUser();
 
         if (currentUser != null) {
+
             try {
                 PreparedStatement stmt = conn.prepareStatement("SELECT anvandareTyp FROM anvandare WHERE anvandareNr = ?");
                 stmt.setInt(1, Integer.parseInt(currentUser));
@@ -188,10 +179,8 @@ public class AccountController extends BaseController {
                     switch (anvandareTyp) {
                         case "Student":
                             anvandareMessage = new StudentAnvandare();
-
                             break;
                         case "Anstalld":
-
                             PreparedStatement stmt1 = conn.prepareStatement("SELECT anstalldTyp FROM anstalld WHERE anvandareNr = ?");
                             stmt1.setInt(1, Integer.parseInt(currentUser));
                             ResultSet rs1 = stmt1.executeQuery();
@@ -200,27 +189,24 @@ public class AccountController extends BaseController {
                             } else {
                                 anvandareMessage = new AnstalldAnvandare();
                             }
-
-
                             break;
                         case "Larare":
                             anvandareMessage = new LarareAnvandare();
-
                             break;
                         case "Forskare":
                             anvandareMessage = new ForskareAnvandare();
-
                             break;
                         default:
                             System.out.println("Invalid anvandareTyp");
-
                             break;
                     }
 
                     if (anvandareMessage != null) {
-                       anvandareMessage.printMessage(LoginController.getfNamn());
-                   }
+                        anvandareMessage.printMessage(LoginController.getfNamn());
+                        setUserMessage(anvandareMessage.getMessage());
+                    }
                 }
+
             } catch (SQLException | NumberFormatException e) {
                 System.out.println("Error initializing the user: " + e.getMessage());
                 e.printStackTrace();
@@ -234,11 +220,10 @@ public class AccountController extends BaseController {
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next() && rs.getString("anstalldTyp").equals("Bibliotekarie")) {
-
-                    // User is a librarian, show the buttons
-
+                    // User is a librarian, show the buttons by default
                     return;
                 }
+
             } catch (SQLException | NumberFormatException e) {
                 System.out.println("Error initializing the user: " + e.getMessage());
                 e.printStackTrace();
@@ -250,9 +235,7 @@ public class AccountController extends BaseController {
         editButton.setVisible(false);
         deleteButton.setVisible(false);
         lateButton.setVisible(false);
-
     }
-
 
     @FXML
     public void returnArticle() throws IOException {
@@ -311,13 +294,6 @@ public class AccountController extends BaseController {
                 EditController editController = loader.getController();
                 editController.receiveDetails(artikelNr, sab, titel, artist, utgava, artikelGenre, artikelKategori, isbn, statusTyp);
 
-                /*
-                // Show the scene into a new window
-                Stage stage = new Stage();
-                stage.setScene(new Scene(editRoot));
-                stage.show();
-                */
-
                 // Replace the content of the current window with edit.fxml content
                 Scene scene = results.getScene();
                 scene.setRoot(editRoot);
@@ -342,7 +318,7 @@ public class AccountController extends BaseController {
         String title = selectedRow.get(2); // assuming the title is in the third column
 
         // Ask the user for confirmation
-        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Delete Book", "Are you sure you want to delete \"" + title + "\"?");
+        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Delete Book", "Are you sure you want to delete " + title + "?");
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // User confirmed, delete the row from the table and database
@@ -351,14 +327,13 @@ public class AccountController extends BaseController {
                 stmt.setInt(1, Integer.parseInt(selectedRow.get(0))); // assuming the article number is in the first column
                 stmt.executeUpdate();
                 results.getItems().remove(selectedRow);
-                BaseController.showAlert(Alert.AlertType.INFORMATION, "Success", "The book \"" + title + "\" was deleted successfully.");
+                BaseController.showAlert(Alert.AlertType.INFORMATION, "Success", "The book " + title + " was deleted successfully.");
             } catch (SQLException e) {
                 BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while deleting the book.");
                 e.printStackTrace();
             }
         }
     }
-
 
     @FXML
     public void searchDB() {
@@ -404,10 +379,9 @@ public class AccountController extends BaseController {
         }
     }
 
-
-    //new borrow with receipt
     public void borrow() {
         Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to borrow this article?");
+
         if (result.isPresent() && result.get() == ButtonType.OK) {
             String currentUser = UserSession.getCurrentUser();
             System.out.println("Current user: " + currentUser);
@@ -419,6 +393,7 @@ public class AccountController extends BaseController {
                     try {
                         // Insert into 'lan' table
                         PreparedStatement insertLanStmt = conn.prepareStatement("INSERT INTO lan (anvandareNr) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+
                         insertLanStmt.setString(1, anvandareNr);
                         insertLanStmt.executeUpdate();
 
@@ -428,14 +403,14 @@ public class AccountController extends BaseController {
 
                         // Insert into 'lanartikel' table
                         PreparedStatement insertLanArtikelStmt = conn.prepareStatement("INSERT INTO lanartikel (lanNr, artikelNr) VALUES (?, ?)");
+
                         insertLanArtikelStmt.setInt(1, lanNr);
                         insertLanArtikelStmt.setString(2, artikelNr);
                         insertLanArtikelStmt.executeUpdate();
 
                         // Query to retrieve inlamningsDatum, laneDatum, and forfalloDatum
-                        PreparedStatement query = conn.prepareStatement("SELECT lanartikel.laneDatum, lanartikel.forfalloDatum " +
-                                "FROM bibliotek.lanartikel " +
-                                "WHERE lanartikel.lanNr = ? AND lanartikel.artikelNr = ?");
+                        PreparedStatement query = conn.prepareStatement("SELECT lanartikel.laneDatum, lanartikel.forfalloDatum FROM bibliotek.lanartikel WHERE lanartikel.lanNr = ? AND lanartikel.artikelNr = ?");
+
                         query.setInt(1, lanNr);
                         query.setString(2, artikelNr);
                         ResultSet resultSet = query.executeQuery();
@@ -464,9 +439,11 @@ public class AccountController extends BaseController {
                             receiptController.setReceiptData(anvandareNr, artikelGenre, artikelKategori, artist, isbn, utgava, artikelNr, sab, titel, forfalloDatum, laneDatum);
 
                             Stage receiptStage = new Stage();
-                            receiptStage.setTitle("Receipt");
+                            receiptStage.setTitle("Kvitto");
                             receiptStage.setScene(new Scene(root));
-                            receiptStage.show();
+                            //receiptStage.show();
+                            receiptStage.showAndWait();
+
                         } else {
                             // No data found
                             throw new RuntimeException("No data found in the result set.");
@@ -483,85 +460,14 @@ public class AccountController extends BaseController {
         }
     }
 
-
+    public void setUserMessage(String message) {
+        userMessage.setText(message);
+    }
 
 
 }
 
 
-//good borrow (old)
-    /*
-    @FXML
-    public void borrow() {
-        // Ask the user for confirmation
-        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to borrow this article?");
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Get the current user
-            String currentUser = UserSession.getCurrentUser();
-            System.out.println("Current user: " + currentUser);
-            // Get the selected row
-            ObservableList<String> selectedItem = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                String artikelNr = selectedItem.get(0);
-
-
-                if (currentUser != null) {
-                    // Get the current user
-                    String anvandareNr = currentUser;
-                    try {
-                        // Insert into lan table
-                        PreparedStatement stmt1 = conn.prepareStatement("INSERT INTO lan (anvandareNr) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
-                        stmt1.setString(1, anvandareNr);
-                        stmt1.executeUpdate();
-
-                        // Get the lanNr generated by the previous insert
-                        ResultSet rs = stmt1.getGeneratedKeys();
-                        rs.next();
-                        int lanNr = rs.getInt(1);
-
-                        // Insert into lanartikel table
-                        PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO lanartikel (lanNr, artikelNr) VALUES (?, ?)");
-                        stmt2.setInt(1, lanNr);
-                        stmt2.setString(2, artikelNr);
-                        stmt2.executeUpdate();
-
-                        // Get information about the borrowed article
-                        BaseController.showAlert(Alert.AlertType.INFORMATION, "Information", "Successfully borrowed item with artikelNr: " + artikelNr + " to anvandareNr: " + anvandareNr);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", e.getMessage());
-                    }
-
-            String sab = selectedItem.get(1);
-            String titel = selectedItem.get(2);
-            String artist = selectedItem.get(3);
-            String utgava = selectedItem.get(4);
-            String artikelGenre = selectedItem.get(5);
-            String artikelKategori = selectedItem.get(6);
-            String isbn = selectedItem.get(7);
-            String statusTyp = selectedItem.get(8);
-
-            System.out.println("artikelNr: " + artikelNr);
-            System.out.println("sab: " + sab);
-            System.out.println("titel: " + titel);
-            System.out.println("artist: " + artist);
-            System.out.println("utgava: " + utgava);
-            System.out.println("artikelGenre: " + artikelGenre);
-            System.out.println("artikelKategori: " + artikelKategori);
-            System.out.println("isbn: " + isbn);
-            System.out.println("statusTyp: " + statusTyp);
-
-            System.out.println("--------------------------");
-
-
-                }
-            } else {
-                //No item is selected, show an error message to the user
-                BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "Please select an item to borrow.");
-            }
-        }
-    }
-*/
 
 
 
