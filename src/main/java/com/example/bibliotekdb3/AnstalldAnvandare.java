@@ -6,7 +6,7 @@ public class AnstalldAnvandare implements AnvandareMessage {
 
     @Override
     public void printMessage(String fNamn) {
-        message = "Welcome " + fNamn + ", you are logged in as anställd.";
+        message = "Welcome " +fNamn+ ", you are logged in as employee.";
         System.out.println(message);
     }
 

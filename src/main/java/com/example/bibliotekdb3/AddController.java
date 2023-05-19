@@ -50,7 +50,7 @@ public class AddController extends BaseController {
     private void add() throws IOException, SQLException {
 
         // Ask the user for confirmation
-        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to add the new row?");
+        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to add the new object?");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // User confirmed, add the new row to the table and database
             // Prepare the SQL statement
@@ -73,14 +73,14 @@ public class AddController extends BaseController {
                 // Execute the SQL statement
                 int rowsInserted = stmt.executeUpdate();
                 if (rowsInserted > 0) {
-                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Information", "A new row has been added to the table.");
+                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Information", "A new object has been added to the table.");
                 } else {
-                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "No new rows have been added to the table.");
+                    BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "No new object have been added to the table.");
                 }
 
             } catch (SQLException e) {
                 // Handle the exception
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "The new row could not be added to the table: " + e.getMessage());
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "The new object could not be added to the table: " + e.getMessage());
                 e.printStackTrace();
             }
         }

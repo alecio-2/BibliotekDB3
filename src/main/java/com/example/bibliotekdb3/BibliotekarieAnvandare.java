@@ -6,7 +6,7 @@ public class BibliotekarieAnvandare implements AnvandareMessage {
     @Override
     public void printMessage(String fNamn) {
 
-        message = "Welcome " + fNamn + ", you are logged in as bibliotekarie.";
+        message = "Welcome " + fNamn + ", you are logged in as librarian.";
         System.out.println(message);
     }
 

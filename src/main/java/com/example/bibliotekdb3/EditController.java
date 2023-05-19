@@ -132,7 +132,7 @@ public class EditController extends BaseController {
                     BaseController.showAlert(Alert.AlertType.ERROR, "Update failed!", "The changes could not be saved.");
                 }
             } catch (SQLException e) {
-                BaseController.showAlert(Alert.AlertType.ERROR, "Database error!", "An error occurred while trying to update the row: " + e.getMessage());
+                BaseController.showAlert(Alert.AlertType.ERROR, "Database error!", "An error occurred while trying to update the object: " + e.getMessage());
                 e.printStackTrace();
             }
 

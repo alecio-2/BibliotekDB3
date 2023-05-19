@@ -5,7 +5,7 @@ public class ForskareAnvandare implements AnvandareMessage {
 
     @Override
     public void printMessage(String fNamn) {
-        message =  "Welcome " + fNamn + ", you are logged in as forskare." ;
+        message =  "Welcome " + fNamn + ", you are logged in as researcher." ;
         System.out.println(message);
     }
     public String getMessage() {

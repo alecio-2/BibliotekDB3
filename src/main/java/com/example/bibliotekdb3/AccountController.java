@@ -106,7 +106,7 @@ public class AccountController extends BaseController {
                 BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while executing the query.: " + e.getMessage());
             } catch (NumberFormatException e) {
                 // Handle the exception
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid anvandareNr: " + e.getMessage());
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid user no: " + e.getMessage());
             }
         }
     }
@@ -156,7 +156,7 @@ public class AccountController extends BaseController {
                 BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while executing the query.: " + e.getMessage());
             } catch (NumberFormatException e) {
                 // Handle the exception
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid anvandareNr: " + e.getMessage());
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Invalid user no: " + e.getMessage());
             }
         }
     }
@@ -197,7 +197,7 @@ public class AccountController extends BaseController {
                             anvandareMessage = new ForskareAnvandare();
                             break;
                         default:
-                            System.out.println("Invalid anvandareTyp");
+                            System.out.println("Invalid user type");
                             break;
                     }
 
@@ -270,7 +270,7 @@ public class AccountController extends BaseController {
             if (selectedRow == null) {
 
                 // Show an alert if no row is selected
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Please select a row to edit.");
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Please select an object to edit.");
                 return;
 
             } else {
@@ -310,15 +310,15 @@ public class AccountController extends BaseController {
         ObservableList<String> selectedRow = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
         if (selectedRow == null) {
             // Show an alert if no row is selected
-            BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Please select a row to delete.");
+            BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Please select an object to delete.");
             return;
         }
 
-        // Get the title of the book to be deleted
+        // Get the title of the object to be deleted
         String title = selectedRow.get(2); // assuming the title is in the third column
 
         // Ask the user for confirmation
-        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Delete Book", "Are you sure you want to delete " + title + "?");
+        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Delete Object", "Are you sure you want to delete " + title + "?");
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
             // User confirmed, delete the row from the table and database
@@ -327,9 +327,9 @@ public class AccountController extends BaseController {
                 stmt.setInt(1, Integer.parseInt(selectedRow.get(0))); // assuming the article number is in the first column
                 stmt.executeUpdate();
                 results.getItems().remove(selectedRow);
-                BaseController.showAlert(Alert.AlertType.INFORMATION, "Success", "The book " + title + " was deleted successfully.");
+                BaseController.showAlert(Alert.AlertType.INFORMATION, "Success", "The object " + title + " was deleted successfully.");
             } catch (SQLException e) {
-                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while deleting the book.");
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while deleting the object.");
                 e.printStackTrace();
             }
         }
@@ -436,10 +436,10 @@ public class AccountController extends BaseController {
 
                             // Obtain the correct controller
                             ReceiptController receiptController = loader.getController();
-                            receiptController.setReceiptData(anvandareNr, artikelGenre, artikelKategori, artist, isbn, utgava, artikelNr, sab, titel, forfalloDatum, laneDatum);
+                            receiptController.setReceiptData(anvandareNr, artikelGenre, artikelKategori, artist, isbn, utgava, artikelNr, sab, titel, laneDatum, forfalloDatum );
 
                             Stage receiptStage = new Stage();
-                            receiptStage.setTitle("Kvitto");
+                            receiptStage.setTitle("Receipt");
                             receiptStage.setScene(new Scene(root));
                             //receiptStage.show();
                             receiptStage.showAndWait();
