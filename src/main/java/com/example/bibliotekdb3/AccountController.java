@@ -24,8 +24,6 @@ public class AccountController extends BaseController {
 
     private Connection conn = DatabaseConnector.getConnection();
 
-    String currentUser;
-
 
     @FXML
     private TextField userMessage;
@@ -374,85 +372,90 @@ public class AccountController extends BaseController {
     }
 
     public void borrow() {
-        Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to borrow this article?");
+        String currentUser = UserSession.getCurrentUser();
+        System.out.println("Current user: " + currentUser);
+        ObservableList<String> selectedItem = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
 
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            String currentUser = UserSession.getCurrentUser();
-            System.out.println("Current user: " + currentUser);
-            ObservableList<String> selectedItem = (ObservableList<String>) results.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                String artikelNr = selectedItem.get(0);
-                if (currentUser != null) {
-                    String anvandareNr = currentUser;
-                    try {
-                        // Insert into 'lan' table
-                        PreparedStatement insertLanStmt = conn.prepareStatement("INSERT INTO lan (anvandareNr) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+        if (selectedItem == null) {
+            BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "Please select an item to borrow.");
+            return;
+        }
 
-                        insertLanStmt.setString(1, anvandareNr);
-                        insertLanStmt.executeUpdate();
+        String artikelNr = selectedItem.get(0);
+        if (currentUser == null) {
+            BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "Please log in to borrow an item.");
+            return;
+        }
 
-                        ResultSet rs = insertLanStmt.getGeneratedKeys();
-                        rs.next();
-                        int lanNr = rs.getInt(1);
+        String anvandareNr = currentUser;
+        try {
+            // Insert into 'lan' table
+            PreparedStatement insertLanStmt = conn.prepareStatement("INSERT INTO lan (anvandareNr) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
 
-                        // Insert into 'lanartikel' table
-                        PreparedStatement insertLanArtikelStmt = conn.prepareStatement("INSERT INTO lanartikel (lanNr, artikelNr) VALUES (?, ?)");
+            insertLanStmt.setString(1, anvandareNr);
+            insertLanStmt.executeUpdate();
 
-                        insertLanArtikelStmt.setInt(1, lanNr);
-                        insertLanArtikelStmt.setString(2, artikelNr);
-                        insertLanArtikelStmt.executeUpdate();
+            ResultSet rs = insertLanStmt.getGeneratedKeys();
+            rs.next();
+            int lanNr = rs.getInt(1);
 
-                        // Query to retrieve inlamningsDatum, laneDatum, and forfalloDatum
-                        PreparedStatement query = conn.prepareStatement("SELECT lanartikel.laneDatum, lanartikel.forfalloDatum FROM bibliotek.lanartikel WHERE lanartikel.lanNr = ? AND lanartikel.artikelNr = ?");
+            // Insert into 'lanartikel' table
+            PreparedStatement insertLanArtikelStmt = conn.prepareStatement("INSERT INTO lanartikel (lanNr, artikelNr) VALUES (?, ?)");
 
-                        query.setInt(1, lanNr);
-                        query.setString(2, artikelNr);
-                        ResultSet resultSet = query.executeQuery();
+            insertLanArtikelStmt.setInt(1, lanNr);
+            insertLanArtikelStmt.setString(2, artikelNr);
+            insertLanArtikelStmt.executeUpdate();
 
-                        // Move the cursor to the first row
-                        if (resultSet.next()) {
-                            // Extract data from the result set
-                            String laneDatum = resultSet.getString("laneDatum");
-                            String forfalloDatum = resultSet.getString("forfalloDatum");
+            // Query to retrieve inlamningsDatum, laneDatum, and forfalloDatum
+            PreparedStatement query = conn.prepareStatement("SELECT lanartikel.laneDatum, lanartikel.forfalloDatum FROM bibliotek.lanartikel WHERE lanartikel.lanNr = ? AND lanartikel.artikelNr = ?");
 
-                            // Show the receipt with the retrieved data
-                            String sab = selectedItem.get(1);
-                            String titel = selectedItem.get(2);
-                            String artist = selectedItem.get(3);
-                            String utgava = selectedItem.get(4);
-                            String artikelGenre = selectedItem.get(5);
-                            String artikelKategori = selectedItem.get(6);
-                            String isbn = selectedItem.get(7);
-                            String statusTyp = selectedItem.get(8);
+            query.setInt(1, lanNr);
+            query.setString(2, artikelNr);
+            ResultSet resultSet = query.executeQuery();
 
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("receipt.fxml"));
-                            Parent root = loader.load();
+            // Move the cursor to the first row
+            if (resultSet.next()) {
+                // Extract data from the result set
+                String laneDatum = resultSet.getString("laneDatum");
+                String forfalloDatum = resultSet.getString("forfalloDatum");
 
-                            // Obtain the correct controller
-                            ReceiptController receiptController = loader.getController();
-                            receiptController.setReceiptData(anvandareNr, artikelGenre, artikelKategori, artist, isbn, utgava, artikelNr, sab, titel, laneDatum, forfalloDatum );
+                // Show the confirmation dialog
+                Optional<ButtonType> result = BaseController.showConfirmation(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to borrow this article?");
 
-                            Stage receiptStage = new Stage();
-                            receiptStage.setTitle("Receipt");
-                            receiptStage.setScene(new Scene(root));
-                            //receiptStage.show();
-                            receiptStage.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    // Show the receipt with the retrieved data
+                    String sab = selectedItem.get(1);
+                    String titel = selectedItem.get(2);
+                    String artist = selectedItem.get(3);
+                    String utgava = selectedItem.get(4);
+                    String artikelGenre = selectedItem.get(5);
+                    String artikelKategori = selectedItem.get(6);
+                    String isbn = selectedItem.get(7);
+                    String statusTyp = selectedItem.get(8);
 
-                        } else {
-                            // No data found
-                            throw new RuntimeException("No data found in the result set.");
-                        }
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("receipt.fxml"));
+                    Parent root = loader.load();
+
+                    // Obtain the correct controller
+                    ReceiptController receiptController = loader.getController();
+                    receiptController.setReceiptData(anvandareNr, artikelGenre, artikelKategori, artist, isbn, utgava, artikelNr, sab, titel, laneDatum, forfalloDatum);
+
+                    Stage receiptStage = new Stage();
+                    receiptStage.setTitle("Receipt");
+                    receiptStage.setScene(new Scene(root));
+                    //receiptStage.show();
+                    receiptStage.showAndWait();
                 }
             } else {
-                BaseController.showAlert(Alert.AlertType.INFORMATION, "Error", "Please select an item to borrow.");
+                BaseController.showAlert(Alert.AlertType.ERROR, "Error", "Borrowing this item is not allowed.");
             }
+        } catch (SQLException e) {
+            BaseController.showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+        } catch (IOException e) {
+            BaseController.showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
         }
     }
+
 
     public void setUserMessage(String message) {
         userMessage.setText(message);
